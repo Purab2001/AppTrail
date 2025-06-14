@@ -86,19 +86,6 @@ const app = {
 
 ---
 
-## API Documentation
-
-### App Data
-
-- **GET /apps**: Returns a list of all apps.
-- **GET /apps/:id**: Returns details for a specific app.
-- **POST /reviews**: Submit a new review (authenticated).
-- **GET /reviews**: Returns all reviews.
-
-> **Note:** This project uses Firebase for authentication and data storage. See `src/firebase/firebase.config.js` for setup.
-
----
-
 ## Configuration
 
 - **Firebase**: Set your Firebase credentials in `.env` or `src/firebase/firebase.config.js`.
