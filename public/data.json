@@ -1,0 +1,178 @@
+[
+  {
+    "id": "app001",
+    "name": "Programming Hero",
+    "developer": "Programming Hero Ltd.",
+    "thumbnail": "https://i.ibb.co.com/ycw4W4dS/programming-hero-thumb.jpg",
+    "banner": "https://i.ibb.co.com/RT4FS95j/programming-hero-banner.jpg",
+    "downloads": 3500000,
+    "category": "Education",
+    "rating": 4.8,
+    "description": "Programming Hero is a fun and interactive way to learn programming. Whether you're a beginner or looking to brush up your skills, this app makes learning to code exciting and practical.",
+    "features": ["Interactive coding lessons", "Real-world projects", "Gamified learning experience"],
+    "reviews": [
+      {
+        "user": "coder_nadia",
+        "rating": 5,
+        "comment": "Best app for beginners! The lessons are super easy to follow and engaging."
+      }
+    ],
+    "size": "55 MB",
+    "version": "2.1.0",
+    "updated": "2023-10-26"
+  },
+  {
+    "id": "app002",
+    "name": "FocusMaster",
+    "developer": "FocusTools Inc.",
+    "thumbnail": "https://i.ibb.co.com/N61fhfN6/focusmaster-thumb.jpg",
+    "banner": "https://i.ibb.co.com/xKwRPMpx/focusmaster-banner.jpg",
+    "downloads": 1200000,
+    "category": "Productivity",
+    "rating": 4.5,
+    "description": "FocusMaster helps you stay focused with the Pomodoro technique and productivity timers.",
+    "features": ["Pomodoro timer", "Task tracking", "Custom productivity goals"],
+    "reviews": [
+      {
+        "user": "productivity_guy",
+        "rating": 4,
+        "comment": "Very useful for staying on track with work!"
+      }
+    ],
+    "size": "30 MB",
+    "version": "1.5.2",
+    "updated": "2023-11-01"
+  },
+  {
+    "id": "app003",
+    "name": "Quizify",
+    "developer": "LearnHub",
+    "thumbnail": "https://i.ibb.co.com/GvZW6X9q/quizify-thumb.jpg",
+    "banner": "https://i.ibb.co.com/CpSDJnVS/quizify-banner.jpg",
+    "downloads": 2100000,
+    "category": "Education",
+    "rating": 4.6,
+    "description": "Quizify offers educational quizzes across subjects to make learning fun and competitive.",
+    "features": ["Timed quizzes", "Leaderboard", "Subject-wise topics"],
+    "reviews": [
+      {
+        "user": "studyqueen",
+        "rating": 5,
+        "comment": "It makes studying fun and challenging!"
+      }
+    ],
+    "size": "40 MB",
+    "version": "3.0.0",
+    "updated": "2023-10-15"
+  },
+  {
+    "id": "app004",
+    "name": "TaskNest",
+    "developer": "OrgaSoft",
+    "thumbnail": "https://i.ibb.co.com/1tcGsnG0/tasknest-thumb.jpg",
+    "banner": "https://i.ibb.co.com/HTwhHnR8/tasknest-banner.jpg",
+    "downloads": 800000,
+    "category": "Productivity",
+    "rating": 4.2,
+    "description": "Organize your tasks efficiently with TaskNest, a simple yet powerful to-do list app.",
+    "features": ["Drag and drop tasks", "Task reminders", "Dark mode"],
+    "reviews": [
+      {
+        "user": "getstuffdone",
+        "rating": 4,
+        "comment": "Clean UI and effective features."
+      }
+    ],
+    "size": "25 MB",
+    "version": "1.1.0",
+    "updated": "2023-09-30"
+  },
+  {
+    "id": "app005",
+    "name": "Galaxy Warriors",
+    "developer": "StarPlay Studios",
+    "thumbnail": "https://i.ibb.co.com/MDLzvCcL/galaxy-warriors-thumb.jpg",
+    "banner": "https://i.ibb.co.com/ymZBGRqX/galaxy-warriors-banner.jpg",
+    "downloads": 4600000,
+    "category": "Gaming",
+    "rating": 4.7,
+    "description": "Engage in fast-paced intergalactic battles in this top-rated action space shooter.",
+    "features": ["PvP mode", "Custom ships", "Story-driven campaigns"],
+    "reviews": [
+      {
+        "user": "space_blazer",
+        "rating": 5,
+        "comment": "Absolutely thrilling gameplay and amazing graphics!"
+      }
+    ],
+    "size": "150 MB",
+    "version": "1.8.5",
+    "updated": "2023-11-10"
+  },
+  {
+    "id": "app006",
+    "name": "Brain Spark",
+    "developer": "NeuroTech Apps",
+    "thumbnail": "https://i.ibb.co.com/6Jn7FmdT/brain-spark-thumb.jpg",
+    "banner": "https://i.ibb.co.com/KxFtChjq/brain-spark-banner.jpg",
+    "downloads": 950000,
+    "category": "Education",
+    "rating": 4.4,
+    "description": "Sharpen your mind with puzzles, brain games, and memory challenges.",
+    "features": ["Daily challenges", "Cognitive tracking", "Fun UI"],
+    "reviews": [
+      {
+        "user": "mindmaster",
+        "rating": 4,
+        "comment": "Fun and effective way to boost brain power."
+      }
+    ],
+    "size": "60 MB",
+    "version": "2.0.0",
+    "updated": "2023-10-05"
+  },
+  {
+    "id": "app007",
+    "name": "Pixel Dash",
+    "developer": "RetroFun Games",
+    "thumbnail": "https://i.ibb.co.com/SX2sbJTX/pixel-dash-thumb.jpg",
+    "banner": "https://i.ibb.co.com/nMhLPR94/pixel-dash-banner.jpg",
+    "downloads": 3000000,
+    "category": "Gaming",
+    "rating": 4.9,
+    "description": "An addictive retro-style platformer with increasingly challenging levels.",
+    "features": ["Retro visuals", "Endless mode", "Achievements"],
+    "reviews": [
+      {
+        "user": "dashfan88",
+        "rating": 5,
+        "comment": "Takes me back to my childhood! Pure fun."
+      }
+    ],
+    "size": "80 MB",
+    "version": "1.3.1",
+    "updated": "2023-11-18"
+  },
+  {
+    "id": "app008",
+    "name": "Zen Journal",
+    "developer": "WellMind Ltd.",
+    "thumbnail": "https://i.ibb.co.com/rRF1bFq9/zen-journal-thumb.jpg",
+    "banner": "https://i.ibb.co.com/Lz8qK4BZ/zen-journal-banner.jpg",
+    "downloads": 500000,
+    "category": "Productivity",
+    "rating": 4.3,
+    "description": "Keep track of your thoughts, emotions, and goals with this guided journal app.",
+    "features": ["Daily mood tracking", "Reflection prompts", "Custom themes"],
+    "reviews": [
+      {
+        "user": "zen_life",
+        "rating": 4,
+        "comment": "Helps me stay grounded and organized every day."
+      }
+    ],
+    "size": "35 MB",
+    "version": "1.0.5",
+    "updated": "2023-10-20"
+  }
+]
