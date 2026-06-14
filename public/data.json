@@ -2,177 +2,359 @@
   {
     "id": "app001",
     "name": "Programming Hero",
+    "tagline": "Learn to code, the fun way.",
     "developer": "Programming Hero Ltd.",
-    "thumbnail": "https://i.ibb.co.com/ycw4W4dS/programming-hero-thumb.jpg",
-    "banner": "https://i.ibb.co.com/RT4FS95j/programming-hero-banner.jpg",
+    "thumbnail": "https://picsum.photos/seed/apptrail-app001-thumb/720/540",
+    "banner": "https://picsum.photos/seed/apptrail-app001-banner/1600/800",
     "downloads": 3500000,
     "category": "Education",
     "rating": 4.8,
+    "reviewsCount": 12,
+    "price": "Free",
+    "platforms": ["iOS", "Android", "Web"],
+    "languages": ["English", "Bangla"],
     "description": "Programming Hero is a fun and interactive way to learn programming. Whether you're a beginner or looking to brush up your skills, this app makes learning to code exciting and practical.",
-    "features": ["Interactive coding lessons", "Real-world projects", "Gamified learning experience"],
+    "longDescription": "Programming Hero turns the often-intimidating world of software into a friendly, gamified journey. Each lesson is a tiny mission; each completed mission unlocks the next. The app covers Python, web fundamentals, and data structures through bite-sized, hands-on challenges. A live community of mentors and a built-in code editor mean you can go from zero to a portfolio project in a few weekends.",
+    "features": [
+      "Interactive coding lessons",
+      "Real-world projects",
+      "Gamified learning experience",
+      "Built-in code editor",
+      "Mentor community"
+    ],
     "reviews": [
       {
         "user": "coder_nadia",
+        "avatar": "https://i.pravatar.cc/120?u=coder_nadia",
         "rating": 5,
-        "comment": "Best app for beginners! The lessons are super easy to follow and engaging."
+        "comment": "Best app for beginners! The lessons are super easy to follow and engaging.",
+        "date": "2024-04-12",
+        "likes": 42,
+        "dislikes": 2
+      },
+      {
+        "user": "imran_s",
+        "avatar": "https://i.pravatar.cc/120?u=imran_s",
+        "rating": 5,
+        "comment": "Went from zero to building my first website in a month. Worth every minute.",
+        "date": "2024-03-28",
+        "likes": 18,
+        "dislikes": 0
+      },
+      {
+        "user": "study_sara",
+        "avatar": "https://i.pravatar.cc/120?u=study_sara",
+        "rating": 4,
+        "comment": "Loved the lessons, the project reviews took a couple of days longer than I'd hoped.",
+        "date": "2024-02-19",
+        "likes": 9,
+        "dislikes": 1
       }
     ],
     "size": "55 MB",
     "version": "2.1.0",
-    "updated": "2023-10-26"
+    "updated": "2024-04-02"
   },
   {
     "id": "app002",
     "name": "FocusMaster",
+    "tagline": "Deep work, on demand.",
     "developer": "FocusTools Inc.",
-    "thumbnail": "https://i.ibb.co.com/N61fhfN6/focusmaster-thumb.jpg",
-    "banner": "https://i.ibb.co.com/xKwRPMpx/focusmaster-banner.jpg",
+    "thumbnail": "https://picsum.photos/seed/apptrail-app002-thumb/720/540",
+    "banner": "https://picsum.photos/seed/apptrail-app002-banner/1600/800",
     "downloads": 1200000,
     "category": "Productivity",
     "rating": 4.5,
-    "description": "FocusMaster helps you stay focused with the Pomodoro technique and productivity timers.",
-    "features": ["Pomodoro timer", "Task tracking", "Custom productivity goals"],
+    "reviewsCount": 8,
+    "price": "Free",
+    "platforms": ["iOS", "Android", "Mac"],
+    "languages": ["English"],
+    "description": "FocusMaster helps you stay focused with the Pomodoro technique and productivity timers, ambient soundscapes and gentle nudges when you drift.",
+    "longDescription": "FocusMaster is a quiet companion for anyone whose job is mostly thinking. The app combines the Pomodoro technique with task-aware ambient sounds — rain on a tin roof for writing, low hum for code, distant cafe chatter for email. Sessions are logged in a private journal so you can see when you actually do your best work.",
+    "features": [
+      "Pomodoro timer",
+      "Task tracking",
+      "Custom productivity goals",
+      "Ambient soundscapes",
+      "Private focus journal"
+    ],
     "reviews": [
       {
         "user": "productivity_guy",
+        "avatar": "https://i.pravatar.cc/120?u=productivity_guy",
         "rating": 4,
-        "comment": "Very useful for staying on track with work!"
+        "comment": "Very useful for staying on track with work!",
+        "date": "2024-01-22",
+        "likes": 14,
+        "dislikes": 1
+      },
+      {
+        "user": "maya_writes",
+        "avatar": "https://i.pravatar.cc/120?u=maya_writes",
+        "rating": 5,
+        "comment": "The ambient tracks are surprisingly great. I forget I'm being timed.",
+        "date": "2024-03-09",
+        "likes": 22,
+        "dislikes": 0
       }
     ],
     "size": "30 MB",
     "version": "1.5.2",
-    "updated": "2023-11-01"
+    "updated": "2024-03-15"
   },
   {
     "id": "app003",
     "name": "Quizify",
+    "tagline": "Turn studying into a sport.",
     "developer": "LearnHub",
-    "thumbnail": "https://i.ibb.co.com/GvZW6X9q/quizify-thumb.jpg",
-    "banner": "https://i.ibb.co.com/CpSDJnVS/quizify-banner.jpg",
+    "thumbnail": "https://picsum.photos/seed/apptrail-app003-thumb/720/540",
+    "banner": "https://picsum.photos/seed/apptrail-app003-banner/1600/800",
     "downloads": 2100000,
     "category": "Education",
     "rating": 4.6,
-    "description": "Quizify offers educational quizzes across subjects to make learning fun and competitive.",
-    "features": ["Timed quizzes", "Leaderboard", "Subject-wise topics"],
+    "reviewsCount": 6,
+    "price": "Free",
+    "platforms": ["iOS", "Android", "Web"],
+    "languages": ["English", "Hindi", "Spanish"],
+    "description": "Quizify offers educational quizzes across subjects to make learning fun and competitive, with daily leaderboards and topic packs curated by teachers.",
+    "longDescription": "Quizify is the study app for people who can't sit still with a textbook. Pick a pack (US History, Organic Chem, Guitar Theory), race the clock, climb the leaderboard. Packs are written and reviewed by certified teachers, so the questions are actually accurate.",
+    "features": [
+      "Timed quizzes",
+      "Daily leaderboards",
+      "Subject-wise topics",
+      "Teacher-reviewed content",
+      "Multiplayer rooms"
+    ],
     "reviews": [
       {
         "user": "studyqueen",
+        "avatar": "https://i.pravatar.cc/120?u=studyqueen",
         "rating": 5,
-        "comment": "It makes studying fun and challenging!"
+        "comment": "It makes studying fun and challenging!",
+        "date": "2024-02-04",
+        "likes": 31,
+        "dislikes": 0
+      },
+      {
+        "user": "ben_l",
+        "avatar": "https://i.pravatar.cc/120?u=ben_l",
+        "rating": 4,
+        "comment": "Solid content. Wish the multiplayer matched me with people at my level.",
+        "date": "2024-03-20",
+        "likes": 7,
+        "dislikes": 2
       }
     ],
     "size": "40 MB",
     "version": "3.0.0",
-    "updated": "2023-10-15"
+    "updated": "2024-03-30"
   },
   {
     "id": "app004",
     "name": "TaskNest",
+    "tagline": "A calmer way to plan your day.",
     "developer": "OrgaSoft",
-    "thumbnail": "https://i.ibb.co.com/1tcGsnG0/tasknest-thumb.jpg",
-    "banner": "https://i.ibb.co.com/HTwhHnR8/tasknest-banner.jpg",
+    "thumbnail": "https://picsum.photos/seed/apptrail-app004-thumb/720/540",
+    "banner": "https://picsum.photos/seed/apptrail-app004-banner/1600/800",
     "downloads": 800000,
     "category": "Productivity",
     "rating": 4.2,
-    "description": "Organize your tasks efficiently with TaskNest, a simple yet powerful to-do list app.",
-    "features": ["Drag and drop tasks", "Task reminders", "Dark mode"],
+    "reviewsCount": 5,
+    "price": "Free",
+    "platforms": ["iOS", "Android", "Web", "Mac"],
+    "languages": ["English", "French"],
+    "description": "Organize your tasks efficiently with TaskNest, a simple yet powerful to-do list app that respects your attention and respects your time.",
+    "longDescription": "TaskNest is the to-do list for people burned out by to-do lists. Drag tasks between Today, This Week and Someday. Tag once, filter forever. The app lives in your menu bar, not your notifications, and is honest about what you'll realistically get done today.",
+    "features": [
+      "Drag and drop tasks",
+      "Task reminders",
+      "Dark mode",
+      "Menu bar companion",
+      "Quick capture"
+    ],
     "reviews": [
       {
         "user": "getstuffdone",
+        "avatar": "https://i.pravatar.cc/120?u=getstuffdone",
         "rating": 4,
-        "comment": "Clean UI and effective features."
+        "comment": "Clean UI and effective features.",
+        "date": "2024-01-30",
+        "likes": 11,
+        "dislikes": 1
       }
     ],
     "size": "25 MB",
     "version": "1.1.0",
-    "updated": "2023-09-30"
+    "updated": "2024-02-12"
   },
   {
     "id": "app005",
     "name": "Galaxy Warriors",
+    "tagline": "Shoot first, story always.",
     "developer": "StarPlay Studios",
-    "thumbnail": "https://i.ibb.co.com/MDLzvCcL/galaxy-warriors-thumb.jpg",
-    "banner": "https://i.ibb.co.com/ymZBGRqX/galaxy-warriors-banner.jpg",
+    "thumbnail": "https://picsum.photos/seed/apptrail-app005-thumb/720/540",
+    "banner": "https://picsum.photos/seed/apptrail-app005-banner/1600/800",
     "downloads": 4600000,
     "category": "Gaming",
     "rating": 4.7,
-    "description": "Engage in fast-paced intergalactic battles in this top-rated action space shooter.",
-    "features": ["PvP mode", "Custom ships", "Story-driven campaigns"],
+    "reviewsCount": 18,
+    "price": "Free",
+    "platforms": ["iOS", "Android"],
+    "languages": ["English", "Japanese", "German"],
+    "description": "Engage in fast-paced intergalactic battles in this top-rated action space shooter with a real story underneath the lasers.",
+    "longDescription": "Galaxy Warriors is a twin-stick shooter that doesn't insult your time. Forty hand-crafted missions, a story you can actually follow, and a co-op mode for the people you live with. The free-to-play is fair; the cosmetics are gorgeous; the season passes are short.",
+    "features": [
+      "PvP mode",
+      "Custom ships",
+      "Story-driven campaigns",
+      "Local co-op",
+      "Fair free-to-play"
+    ],
     "reviews": [
       {
         "user": "space_blazer",
+        "avatar": "https://i.pravatar.cc/120?u=space_blazer",
         "rating": 5,
-        "comment": "Absolutely thrilling gameplay and amazing graphics!"
+        "comment": "Absolutely thrilling gameplay and amazing graphics!",
+        "date": "2024-03-04",
+        "likes": 67,
+        "dislikes": 3
+      },
+      {
+        "user": "noor_a",
+        "avatar": "https://i.pravatar.cc/120?u=noor_a",
+        "rating": 5,
+        "comment": "Co-op with my partner has been a weekly ritual for months now.",
+        "date": "2024-02-22",
+        "likes": 28,
+        "dislikes": 0
       }
     ],
     "size": "150 MB",
     "version": "1.8.5",
-    "updated": "2023-11-10"
+    "updated": "2024-04-05"
   },
   {
     "id": "app006",
     "name": "Brain Spark",
+    "tagline": "A small workout for a sharper mind.",
     "developer": "NeuroTech Apps",
-    "thumbnail": "https://i.ibb.co.com/6Jn7FmdT/brain-spark-thumb.jpg",
-    "banner": "https://i.ibb.co.com/KxFtChjq/brain-spark-banner.jpg",
+    "thumbnail": "https://picsum.photos/seed/apptrail-app006-thumb/720/540",
+    "banner": "https://picsum.photos/seed/apptrail-app006-banner/1600/800",
     "downloads": 950000,
     "category": "Education",
     "rating": 4.4,
-    "description": "Sharpen your mind with puzzles, brain games, and memory challenges.",
-    "features": ["Daily challenges", "Cognitive tracking", "Fun UI"],
+    "reviewsCount": 4,
+    "price": "Free",
+    "platforms": ["iOS", "Android"],
+    "languages": ["English"],
+    "description": "Sharpen your mind with puzzles, brain games, and memory challenges that take three minutes but quietly do a lot of work.",
+    "longDescription": "Brain Spark is the anti-Lumosity: a small set of well-designed puzzles, no streaks, no anxiety, no upsell. Three minutes in the morning and you get a tiny, honest chart of how your focus and memory have moved over the last month.",
+    "features": [
+      "Daily challenges",
+      "Cognitive tracking",
+      "Fun UI",
+      "No streak anxiety",
+      "Privacy-first"
+    ],
     "reviews": [
       {
         "user": "mindmaster",
+        "avatar": "https://i.pravatar.cc/120?u=mindmaster",
         "rating": 4,
-        "comment": "Fun and effective way to boost brain power."
+        "comment": "Fun and effective way to boost brain power.",
+        "date": "2024-02-17",
+        "likes": 19,
+        "dislikes": 1
       }
     ],
     "size": "60 MB",
     "version": "2.0.0",
-    "updated": "2023-10-05"
+    "updated": "2024-03-10"
   },
   {
     "id": "app007",
     "name": "Pixel Dash",
+    "tagline": "A love letter to the 16-bit era.",
     "developer": "RetroFun Games",
-    "thumbnail": "https://i.ibb.co.com/SX2sbJTX/pixel-dash-thumb.jpg",
-    "banner": "https://i.ibb.co.com/nMhLPR94/pixel-dash-banner.jpg",
+    "thumbnail": "https://picsum.photos/seed/apptrail-app007-thumb/720/540",
+    "banner": "https://picsum.photos/seed/apptrail-app007-banner/1600/800",
     "downloads": 3000000,
     "category": "Gaming",
     "rating": 4.9,
-    "description": "An addictive retro-style platformer with increasingly challenging levels.",
-    "features": ["Retro visuals", "Endless mode", "Achievements"],
+    "reviewsCount": 22,
+    "price": "$2.99",
+    "platforms": ["iOS", "Android", "Switch"],
+    "languages": ["English", "Portuguese", "Japanese"],
+    "description": "An addictive retro-style platformer with increasingly challenging levels, hand-pixeled art, and a soundtrack by veterans of the chiptune scene.",
+    "longDescription": "Pixel Dash is what happens when a small team of ex-Sega devs decide they want to make the platformer they loved as kids. Sixty levels, four worlds, a level editor, and a soundtrack you will hum for a week. No ads. No IAP. Just the game.",
+    "features": [
+      "Retro visuals",
+      "Endless mode",
+      "Achievements",
+      "Hand-pixeled art",
+      "Level editor"
+    ],
     "reviews": [
       {
         "user": "dashfan88",
+        "avatar": "https://i.pravatar.cc/120?u=dashfan88",
         "rating": 5,
-        "comment": "Takes me back to my childhood! Pure fun."
+        "comment": "Takes me back to my childhood! Pure fun.",
+        "date": "2024-03-25",
+        "likes": 91,
+        "dislikes": 2
+      },
+      {
+        "user": "ari_t",
+        "avatar": "https://i.pravatar.cc/120?u=ari_t",
+        "rating": 5,
+        "comment": "I bought it for the art and stayed for the soundtrack.",
+        "date": "2024-02-28",
+        "likes": 35,
+        "dislikes": 0
       }
     ],
     "size": "80 MB",
     "version": "1.3.1",
-    "updated": "2023-11-18"
+    "updated": "2024-04-01"
   },
   {
     "id": "app008",
     "name": "Zen Journal",
+    "tagline": "A quiet place to think on paper.",
     "developer": "WellMind Ltd.",
-    "thumbnail": "https://i.ibb.co.com/rRF1bFq9/zen-journal-thumb.jpg",
-    "banner": "https://i.ibb.co.com/Lz8qK4BZ/zen-journal-banner.jpg",
+    "thumbnail": "https://picsum.photos/seed/apptrail-app008-thumb/720/540",
+    "banner": "https://picsum.photos/seed/apptrail-app008-banner/1600/800",
     "downloads": 500000,
     "category": "Productivity",
     "rating": 4.3,
-    "description": "Keep track of your thoughts, emotions, and goals with this guided journal app.",
-    "features": ["Daily mood tracking", "Reflection prompts", "Custom themes"],
+    "reviewsCount": 3,
+    "price": "Free",
+    "platforms": ["iOS", "Android", "Web"],
+    "languages": ["English", "Japanese"],
+    "description": "Keep track of your thoughts, emotions, and goals with this guided journal app that respects your privacy and your time.",
+    "longDescription": "Zen Journal is a single notebook with a daily prompt. No streaks, no badges, no leaderboards. Your entries are encrypted on device, never leave your phone, and can be exported as plain text whenever you want. The team behind it believes journaling should be the opposite of a metric.",
+    "features": [
+      "Daily mood tracking",
+      "Reflection prompts",
+      "Custom themes",
+      "End-to-end encryption",
+      "Plain-text export"
+    ],
     "reviews": [
       {
         "user": "zen_life",
+        "avatar": "https://i.pravatar.cc/120?u=zen_life",
         "rating": 4,
-        "comment": "Helps me stay grounded and organized every day."
+        "comment": "Helps me stay grounded and organized every day.",
+        "date": "2024-01-12",
+        "likes": 24,
+        "dislikes": 1
       }
     ],
     "size": "35 MB",
     "version": "1.0.5",
-    "updated": "2023-10-20"
+    "updated": "2024-02-25"
   }
 ]

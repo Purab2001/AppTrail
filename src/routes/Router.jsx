@@ -1,5 +1,6 @@
 import { createBrowserRouter } from "react-router";
 import HomeLayout from "../layouts/HomeLayout";
+import AuthLayout from "../layouts/AuthLayout";
 import Home from "../pages/Home";
 import Apps from "../pages/Apps";
 import AppDetails from "../pages/AppDetails";
@@ -40,14 +41,6 @@ const router = createBrowserRouter([
                 hydrateFallbackElement: <Loading />,
             },
             {
-                path: "login",
-                element: <Login />,
-            },
-            {
-                path: "register",
-                element: <Register />,
-            },
-            {
                 path: "profile",
                 element: (
                     <PrivateRoute>
@@ -66,6 +59,19 @@ const router = createBrowserRouter([
             {
                 path: "*",
                 element: <NotFound />,
+            },
+        ],
+    },
+    {
+        element: <AuthLayout />,
+        children: [
+            {
+                path: "login",
+                element: <Login />,
+            },
+            {
+                path: "register",
+                element: <Register />,
             },
         ],
     },

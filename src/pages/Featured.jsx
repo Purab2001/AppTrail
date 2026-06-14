@@ -1,162 +1,285 @@
-import { useLoaderData } from 'react-router';
-import { FaStar, FaArrowRight } from 'react-icons/fa';
+import { useLoaderData, Link } from "react-router";
+import { motion } from "framer-motion";
+import { FiArrowUpRight, FiArrowDown, FiDownload, FiStar } from "react-icons/fi";
+import { Eyebrow } from "../components/Section";
+import { StarRating } from "../components/Rating";
+import { formatNumber } from "../utils/format";
 
-const NAVBAR_HEIGHT = 52;
-
-const testimonials = [
+const TESTIMONIALS = [
   {
-    name: 'Ayesha Rahman',
-    avatar: 'https://randomuser.me/api/portraits/women/44.jpg',
-    quote: 'The featured apps on AppTrail are always top-notch and super useful!',
-    rating: 5,
+    quote:
+      "The featured apps on AppTrail are always top-notch and super useful — it's how I find my weekend reading list.",
+    name: "Ayesha Rahman",
+    role: "Designer, Dhaka",
+    avatar: "https://i.pravatar.cc/120?u=ayesha_r",
   },
   {
-    name: 'Tanvir Hasan',
-    avatar: 'https://randomuser.me/api/portraits/men/32.jpg',
-    quote: 'I love discovering new apps every week. The recommendations are spot on.',
-    rating: 5,
+    quote:
+      "I love discovering new apps every Friday. The recommendations feel like notes from a friend who reads more than me.",
+    name: "Tanvir Hasan",
+    role: "Engineer, Berlin",
+    avatar: "https://i.pravatar.cc/120?u=tanvir_h",
   },
   {
-    name: 'Sadia Islam',
-    avatar: 'https://randomuser.me/api/portraits/women/68.jpg',
-    quote: 'The interface is beautiful and the featured section is my favorite!',
-    rating: 4,
+    quote:
+      "The featured section is my favorite part of the app — a genuine editorial filter in a sea of store rankings.",
+    name: "Sadia Islam",
+    role: "Writer, Toronto",
+    avatar: "https://i.pravatar.cc/120?u=sadia_i",
   },
 ];
 
-const Featured = () => {
-  const appsData = useLoaderData() || [];
-  const featuredApps = appsData.slice(0, 6);
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 text-slate-100 pb-16" style={{ paddingTop: `${NAVBAR_HEIGHT + 24}px` }}>
-      {/* Hero Section */}
-      <section className="relative flex flex-col justify-center items-center min-h-[400px] py-16 px-4 text-center overflow-hidden">
-        <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-emerald-500/10 to-sky-400/10 pointer-events-none" />
-        <div className="relative z-10 max-w-3xl mx-auto">
-          <h1 className="text-5xl md:text-6xl font-extrabold mb-8 bg-gradient-to-r from-emerald-400 via-sky-400 to-indigo-500 bg-clip-text text-transparent drop-shadow-lg font-inter animate-fade-in">
-            Featured Apps
-          </h1>
-          <p className="text-xl md:text-2xl mb-10 text-slate-200 font-medium animate-fade-in delay-100">
-            Handpicked apps that are trending, innovative, and highly rated by our community.
-          </p>
-          <a
-            href="#featured-grid"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-sky-400 hover:from-emerald-600 hover:to-sky-500 text-white font-semibold shadow-md transition-all duration-200 animate-fade-in delay-200 focus:outline-none focus:ring-2 focus:ring-emerald-400"
-          >
-            Explore Featured <FaArrowRight />
-          </a>
-        </div>
-      </section>
-
-      {/* Featured Content Grid */}
-      <section id="featured-grid" className="max-w-7xl mx-auto px-4 py-16">
-        <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 font-inter text-slate-100">This Week's Top Picks</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {featuredApps.map(app => (
-            <div
-              key={app.id}
-              className="group bg-slate-900 border border-slate-800 rounded-2xl shadow-xl overflow-hidden hover:shadow-emerald-500/20 hover:scale-105 transition-all duration-300 focus-within:ring-2 focus-within:ring-emerald-400"
-              tabIndex={0}
-              aria-label={`View details for ${app.name}`}
-            >
-              <img
-                className="w-full h-48 object-cover rounded-t-2xl transition-transform duration-300 group-hover:scale-105"
-                src={app.banner || app.thumbnail}
-                alt={app.name}
-                onError={(e) => {
-                  e.target.onerror = null;
-                  e.target.src = 'https://via.placeholder.com/400x200?text=Image+Not+Found';
-                }}
-              />
-              <div className="flex-1 flex flex-col p-6 gap-3">
-                <h3 className="mb-1 text-xl font-bold font-inter text-slate-100 truncate group-hover:text-emerald-400 transition-colors duration-200">
-                  {app.name}
-                </h3>
-                <div className="flex items-center gap-3 mb-2">
-                  <span className="inline-flex items-center gap-1 text-amber-400 font-semibold">
-                    <FaStar aria-label="Rating" /> {app.rating}
-                  </span>
-                  <span className="text-slate-500">•</span>
-                  <span className="inline-flex items-center gap-1 text-sky-400 font-semibold">
-                    {app.downloads.toLocaleString()} downloads
-                  </span>
-                </div>
-                <p className="text-slate-400 text-sm mb-4 line-clamp-3">{app.description}</p>
-                <div className="flex justify-between items-center mt-auto">
-                  <span className="bg-emerald-500/10 text-emerald-400 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">
-                    {app.category || 'App'}
-                  </span>
-                  <a
-                    href={`/apps/${app.id}`}
-                    className="inline-flex items-center px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-emerald-500 to-sky-400 rounded-xl shadow hover:from-emerald-600 hover:to-sky-500 focus:outline-none focus:ring-2 focus:ring-emerald-400 transition-all duration-200"
-                    aria-label={`View details for ${app.name}`}
-                  >
-                    View Details
-                  </a>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Call-to-Action Section */}
-      <section className="max-w-3xl mx-auto px-4 py-16 text-center">
-        <h2 className="text-3xl md:text-4xl font-bold mb-6 font-inter text-slate-100">Want to get featured?</h2>
-        <p className="text-lg text-slate-300 mb-8">
-          Submit your app to AppTrail and reach thousands of users. Join our growing community of developers and innovators!
-        </p>
-        <a
-          href="/register"
-          className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-sky-400 hover:from-emerald-600 hover:to-sky-500 text-white font-semibold shadow-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-emerald-400"
-        >
-          Submit Your App <FaArrowRight />
-        </a>
-      </section>
-
-      {/* Testimonials Section */}
-      <section className="max-w-5xl mx-auto px-4 py-16">
-        <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 font-inter text-slate-100">What Users Say</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {testimonials.map((t) => (
-            <div
-              key={t.name}
-              className="bg-slate-900 border border-slate-800 rounded-2xl shadow-lg p-8 flex flex-col items-center text-center hover:scale-105 hover:shadow-emerald-500/20 transition-all duration-300"
-            >
-              <img src={t.avatar} alt={t.name} className="w-16 h-16 rounded-full mb-4 border-2 border-emerald-400 shadow" />
-              <blockquote className="italic text-slate-200 mb-4">&ldquo;{t.quote}&rdquo;</blockquote>
-              <div className="flex gap-1 mb-2">
-                {Array.from({ length: t.rating }).map((_, i) => (
-                  <span key={i} className="text-amber-400 text-lg">★</span>
-                ))}
-              </div>
-              <div className="font-bold text-emerald-400">{t.name}</div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Animations */}
-      <style>{`
-        .animate-fade-in {
-          animation: fadeIn 0.8s cubic-bezier(.4,0,.2,1) both;
-        }
-        .delay-100 { animation-delay: 0.1s; }
-        .delay-200 { animation-delay: 0.2s; }
-        @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(24px);}
-          to { opacity: 1; transform: translateY(0);}
-        }
-        .line-clamp-3 {
-          display: -webkit-box;
-          -webkit-line-clamp: 3;
-          -webkit-box-orient: vertical;
-          overflow: hidden;
-        }
-      `}</style>
-    </div>
-  );
+const PULL_QUOTE = {
+  quote:
+    "Featured is not a leaderboard. It's six apps the editors kept returning to this week — and one we couldn't stop thinking about.",
+  author: "The editors",
+  issue: "Issue 01",
 };
 
-export default Featured;
+export default function Featured() {
+  const appsData = useLoaderData() || [];
+  // Pick 6 featured by a score (rating weighted by downloads) so the editorial feels intentional
+  const featured = [...appsData]
+    .sort(
+      (a, b) =>
+        b.rating * Math.log10(b.downloads + 10) -
+        a.rating * Math.log10(a.downloads + 10)
+    )
+    .slice(0, 6);
+
+  const cover = featured[0];
+  const rest = featured.slice(1);
+
+  return (
+    <div className="bg-[#FAFAF7]">
+      {/* Magazine cover */}
+      <section className="pt-16 sm:pt-24 pb-12">
+        <div className="max-w-7xl mx-auto px-6 lg:px-10">
+          <div className="flex items-end justify-between gap-6 mb-12">
+            <div>
+              <Eyebrow>— Issue 01 / Featured</Eyebrow>
+              <h1 className="mt-4 font-display text-[clamp(3rem,9vw,7rem)] leading-[0.9] tracking-[-0.03em]">
+                Six apps,
+                <br />
+                <span className="italic text-[#FF4A1C]">one shelf.</span>
+              </h1>
+              <p className="mt-5 text-[15.5px] text-[#6B6B6B] max-w-lg leading-relaxed">
+                Hand-picked from this week's submissions, the editors' late-night phone
+                screens, and the apps our readers keep mentioning in the comments.
+              </p>
+            </div>
+            <a
+              href="#featured-list"
+              className="hidden sm:inline-flex items-center gap-2 text-[12px] font-mono tracking-widest uppercase text-[#0A0A0A] link-underline"
+            >
+              Browse the issue
+              <FiArrowDown size={12} />
+            </a>
+          </div>
+
+          {/* Cover feature */}
+          {cover && (
+            <Link
+              to={`/apps/${cover.id}`}
+              className="group block relative overflow-hidden rounded-3xl bg-[#0A0A0A] text-[#FAFAF7]"
+            >
+              <div className="grid lg:grid-cols-12 min-h-[520px]">
+                <div className="relative lg:col-span-7 aspect-[4/3] lg:aspect-auto overflow-hidden">
+                  <img
+                    src={cover.banner}
+                    alt=""
+                    className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700"
+                  />
+                  <div className="absolute top-5 left-5 inline-flex items-center gap-2 px-3 h-7 rounded-full bg-white/95 backdrop-blur-sm text-[11px] font-mono tracking-widest uppercase text-[#0A0A0A]">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#FF4A1C]" /> Cover story
+                  </div>
+                </div>
+                <div className="lg:col-span-5 p-8 sm:p-12 flex flex-col justify-between">
+                  <div>
+                    <p className="font-mono text-[10px] tracking-widest uppercase text-white/50">
+                      01 / Featured
+                    </p>
+                    <h2 className="mt-4 font-display text-4xl sm:text-5xl lg:text-6xl leading-[0.95] tracking-[-0.02em]">
+                      {cover.name}
+                    </h2>
+                    {cover.tagline && (
+                      <p className="mt-5 text-[20px] sm:text-[22px] font-display italic text-white/80 max-w-md">
+                        &ldquo;{cover.tagline}&rdquo;
+                      </p>
+                    )}
+                    <p className="mt-5 text-[14.5px] text-white/60 leading-relaxed max-w-md line-clamp-3">
+                      {cover.description}
+                    </p>
+                  </div>
+                  <div className="mt-10">
+                    <div className="flex items-center gap-5 text-[12px] text-white/70">
+                      <StarRating value={cover.rating} size={12} />
+                      <span className="font-mono">
+                        {formatNumber(cover.downloads)} downloads
+                      </span>
+                    </div>
+                    <div className="mt-6 inline-flex items-center gap-2 h-11 px-5 rounded-full bg-[#FF4A1C] text-white text-[13px] font-medium group-hover:bg-white group-hover:text-[#0A0A0A] transition-colors">
+                      Read the cover story
+                      <FiArrowUpRight size={14} />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Link>
+          )}
+        </div>
+      </section>
+
+      {/* Pull quote */}
+      <section className="bg-[#0A0A0A] text-[#FAFAF7] noise py-20 sm:py-28">
+        <div className="relative max-w-4xl mx-auto px-6 lg:px-10 text-center">
+          <Eyebrow className="text-white/50">— Editor's note</Eyebrow>
+          <p className="mt-6 font-display text-3xl sm:text-4xl lg:text-5xl leading-[1.1] tracking-[-0.01em]">
+            &ldquo;{PULL_QUOTE.quote}&rdquo;
+          </p>
+          <p className="mt-8 font-mono text-[11px] tracking-widest uppercase text-white/50">
+            — {PULL_QUOTE.author} · {PULL_QUOTE.issue}
+          </p>
+        </div>
+      </section>
+
+      {/* The list */}
+      <section id="featured-list" className="py-20 sm:py-28">
+        <div className="max-w-7xl mx-auto px-6 lg:px-10">
+          <div className="flex items-end justify-between mb-12">
+            <div>
+              <Eyebrow>— 02 / The list</Eyebrow>
+              <h2 className="mt-3 font-display text-4xl sm:text-5xl tracking-tight">
+                This week's <span className="italic text-[#FF4A1C]">top picks.</span>
+              </h2>
+            </div>
+            <p className="hidden sm:block font-mono text-[11px] tracking-widest uppercase text-[#6B6B6B]">
+              Updated Friday 09:00 GMT
+            </p>
+          </div>
+
+          <ul className="space-y-6">
+            {rest.map((app, i) => (
+              <motion.li
+                key={app.id}
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-60px" }}
+                transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1], delay: i * 0.06 }}
+              >
+                <Link
+                  to={`/apps/${app.id}`}
+                  className="group grid grid-cols-12 gap-4 sm:gap-8 items-center bg-white border border-[#E5E5E0] rounded-2xl overflow-hidden hover:border-[#0A0A0A] transition-colors"
+                >
+                  <div className="col-span-4 sm:col-span-3 aspect-[4/3] overflow-hidden bg-[#F1EFE8]">
+                    <img
+                      src={app.thumbnail}
+                      alt=""
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                    />
+                  </div>
+                  <div className="col-span-8 sm:col-span-7 py-5 sm:py-8 pr-4 sm:pr-6">
+                    <div className="flex items-center gap-3 text-[11px] font-mono tracking-widest uppercase text-[#6B6B6B]">
+                      <span>0{i + 2}</span>
+                      <span>·</span>
+                      <span>{app.category}</span>
+                    </div>
+                    <h3 className="mt-2 font-display text-2xl sm:text-3xl tracking-tight group-hover:text-[#FF4A1C] transition-colors">
+                      {app.name}
+                    </h3>
+                    {app.tagline && (
+                      <p className="mt-2 text-[14.5px] text-[#6B6B6B] line-clamp-1">
+                        {app.tagline}
+                      </p>
+                    )}
+                    <div className="mt-3 flex items-center gap-4 text-[12px] text-[#6B6B6B] font-mono">
+                      <span className="inline-flex items-center gap-1.5">
+                        <FiStar size={11} className="text-[#FF4A1C]" /> {app.rating?.toFixed(1)}
+                      </span>
+                      <span className="inline-flex items-center gap-1.5">
+                        <FiDownload size={11} /> {formatNumber(app.downloads)}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="hidden sm:flex col-span-2 justify-end pr-8">
+                    <span className="w-11 h-11 rounded-full border border-[#E5E5E0] flex items-center justify-center group-hover:bg-[#0A0A0A] group-hover:text-white group-hover:border-[#0A0A0A] transition-all">
+                      <FiArrowUpRight size={16} />
+                    </span>
+                  </div>
+                </Link>
+              </motion.li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      {/* Testimonials */}
+      <section className="py-20 sm:py-28 border-t border-[#0A0A0A]">
+        <div className="max-w-7xl mx-auto px-6 lg:px-10">
+          <div className="mb-12">
+            <Eyebrow>— Letters</Eyebrow>
+            <h2 className="mt-3 font-display text-4xl sm:text-5xl tracking-tight">
+              What readers <span className="italic text-[#FF4A1C]">tell us.</span>
+            </h2>
+          </div>
+          <div className="grid md:grid-cols-3 gap-6">
+            {TESTIMONIALS.map((t) => (
+              <figure
+                key={t.name}
+                className="bg-white border border-[#E5E5E0] rounded-2xl p-6 sm:p-8 hover:border-[#0A0A0A] transition-colors"
+              >
+                <span className="font-display text-5xl leading-none text-[#FF4A1C]">&ldquo;</span>
+                <blockquote className="mt-2 font-display text-[18px] leading-[1.4] tracking-tight text-[#0A0A0A]">
+                  {t.quote}
+                </blockquote>
+                <figcaption className="mt-6 flex items-center gap-3">
+                  <img
+                    src={t.avatar}
+                    alt=""
+                    className="w-10 h-10 rounded-full object-cover"
+                  />
+                  <div>
+                    <p className="text-[13px] font-medium text-[#0A0A0A]">{t.name}</p>
+                    <p className="text-[11px] font-mono text-[#6B6B6B] tracking-wider">
+                      {t.role}
+                    </p>
+                  </div>
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Submit CTA */}
+      <section className="py-20 sm:py-28">
+        <div className="max-w-4xl mx-auto px-6 lg:px-10 text-center">
+          <Eyebrow>— Build something?</Eyebrow>
+          <h2 className="mt-4 font-display text-4xl sm:text-5xl lg:text-6xl leading-[1.05] tracking-[-0.02em]">
+            Submit your app
+            <br />
+            <span className="italic text-[#FF4A1C]">to the editors.</span>
+          </h2>
+          <p className="mt-6 text-[15.5px] text-[#6B6B6B] max-w-md mx-auto">
+            Independent apps only. We read every submission, get back within a week, and
+            feature what deserves to be featured.
+          </p>
+          <div className="mt-9 flex flex-col sm:flex-row gap-3 justify-center">
+            <Link
+              to="/register"
+              className="inline-flex items-center justify-center gap-2 h-12 px-5 rounded-full bg-[#FF4A1C] text-white text-[14px] font-medium hover:bg-[#0A0A0A] transition-colors"
+            >
+              Submit your app <FiArrowUpRight size={14} />
+            </Link>
+            <Link
+              to="/apps"
+              className="inline-flex items-center justify-center gap-2 h-12 px-5 rounded-full border border-[#0A0A0A] text-[#0A0A0A] text-[14px] font-medium hover:bg-[#0A0A0A] hover:text-[#FAFAF7] transition-colors"
+            >
+              Browse the library
+            </Link>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}

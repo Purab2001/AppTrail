@@ -1,202 +1,247 @@
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router';
-import { useAuth } from '../contexts/AuthContext';
-import { FcGoogle } from 'react-icons/fc';
-import { FaLock, FaEnvelope, FaUser, FaImage, FaEye, FaEyeSlash } from 'react-icons/fa';
+import { useState } from "react";
+import { Link, useNavigate } from "react-router";
+import { useAuth } from "../contexts/AuthContext";
+import { motion } from "framer-motion";
+import {
+  FiMail,
+  FiLock,
+  FiUser,
+  FiImage,
+  FiEye,
+  FiEyeOff,
+  FiArrowUpRight,
+  FiCheck,
+} from "react-icons/fi";
+import { FcGoogle } from "react-icons/fc";
+import { Eyebrow } from "../components/Section";
 
-const NAVBAR_HEIGHT = 72;
+const PERKS = [
+  "Save apps to your personal shelf",
+  "Write and publish reviews",
+  "Get the weekly editorial in your inbox",
+  "No tracking, no upsell",
+];
 
-const Register = () => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [photoURL, setPhotoURL] = useState('');
+function Field({ id, label, type = "text", value, onChange, icon, rightSlot, required, placeholder, pattern, title, autoComplete }) {
+  const Icon = icon;
+  return (
+    <div>
+      <label htmlFor={id} className="block text-[12px] font-mono tracking-widest uppercase text-[#6B6B6B]">
+        {label}
+      </label>
+      <div className="mt-2 relative flex items-center">
+        {Icon && (
+          <Icon size={14} className="absolute left-4 text-[#9A9A95] pointer-events-none" />
+        )}
+        <input
+          id={id}
+          type={type}
+          value={value}
+          onChange={onChange}
+          required={required}
+          placeholder={placeholder}
+          pattern={pattern}
+          title={title}
+          autoComplete={autoComplete}
+          className="w-full h-12 pl-10 pr-12 rounded-full bg-white border border-[#E5E5E0] text-[14.5px] text-[#0A0A0A] placeholder:text-[#9A9A95] outline-none focus:border-[#0A0A0A] transition-colors"
+        />
+        {rightSlot && <div className="absolute right-3">{rightSlot}</div>}
+      </div>
+    </div>
+  );
+}
+
+function EditorialPanel() {
+  return (
+    <div className="hidden lg:flex flex-col justify-between bg-[#0A0A0A] text-[#FAFAF7] noise p-12 relative overflow-hidden">
+      <Link to="/" className="relative z-10 inline-flex items-center gap-2.5">
+        <span className="relative w-8 h-8 rounded-lg bg-[#FAFAF7] flex items-center justify-center">
+          <span className="absolute inset-[3px] rounded-md bg-[#FF4A1C]" />
+          <span className="relative font-display text-[#0A0A0A] text-[15px] font-semibold leading-none">
+            a
+          </span>
+        </span>
+        <span className="font-display text-[22px] font-semibold tracking-tight">
+          AppTrail
+        </span>
+      </Link>
+
+      <div className="relative z-10 max-w-md">
+        <Eyebrow className="text-white/50">— Issue 01 / Membership</Eyebrow>
+        <h2 className="mt-5 font-display text-[clamp(2.5rem,5vw,4.5rem)] leading-[0.98] tracking-[-0.02em]">
+          Open a
+          <br />
+          <span className="italic text-[#FF4A1C]">free account.</span>
+        </h2>
+        <p className="mt-6 text-[14.5px] text-white/70 leading-relaxed max-w-sm">
+          A free account gets you a shelf, a voice, and the Friday dispatch. No card, no
+          commitment, no upgrade nags.
+        </p>
+        <ul className="mt-8 space-y-3">
+          {PERKS.map((p) => (
+            <li key={p} className="flex items-center gap-3 text-[13.5px] text-white/80">
+              <span className="w-6 h-6 rounded-full border border-white/15 flex items-center justify-center text-[#FF4A1C]">
+                <FiCheck size={12} />
+              </span>
+              {p}
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <p className="relative z-10 font-mono text-[10px] tracking-widest uppercase text-white/40">
+        — By joining, you agree to our terms & privacy.
+      </p>
+    </div>
+  );
+}
+
+export default function Register() {
+  const [form, setForm] = useState({ name: "", email: "", photoURL: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const { register, googleLogin } = useAuth();
   const navigate = useNavigate();
 
+  const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       setLoading(true);
-      await register(email, password, name, photoURL);
-      navigate('/');
-    } catch (error) {
-      console.error(error);
+      await register(form.email, form.password, form.name, form.photoURL);
+      navigate("/");
+    } catch {
+      /* toast handled in context */
     } finally {
       setLoading(false);
     }
   };
 
-  const handleGoogleLogin = async () => {
+  const handleGoogle = async () => {
     try {
       setLoading(true);
       await googleLogin();
-      navigate('/');
-    } catch (error) {
-      console.error(error);
+      navigate("/");
+    } catch {
+      /* toast handled in context */
     } finally {
       setLoading(false);
     }
   };
 
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
-  };
-
   return (
-    <div className="min-h-screen pb-6 flex items-center justify-center bg-gradient-to-br from-slate-900 to-slate-800 text-slate-100" style={{ paddingTop: `${NAVBAR_HEIGHT + 24}px` }}>
-      <div className="w-full max-w-md p-8 space-y-8 bg-slate-900 border border-slate-800 rounded-3xl shadow-2xl">
-        <div className="text-center">
-          <h1 className="text-3xl font-extrabold tracking-tight text-emerald-400">Create Account</h1>
-          <p className="mt-2 text-sm text-slate-400">Join AppTrail to discover amazing apps</p>
-        </div>
-        <form onSubmit={handleSubmit} className="mt-8 space-y-6">
-          <div className="space-y-4">
+    <div className="min-h-screen grid lg:grid-cols-2 bg-[#FAFAF7]">
+      <EditorialPanel />
+
+      <div className="flex items-center justify-center px-6 py-16 sm:py-20">
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+          className="w-full max-w-md"
+        >
+          <Eyebrow>— Create account</Eyebrow>
+          <h1 className="mt-3 font-display text-4xl sm:text-5xl leading-[1] tracking-tight">
+            Join the <span className="italic text-[#FF4A1C]">library.</span>
+          </h1>
+          <p className="mt-3 text-[14px] text-[#6B6B6B]">
+            Already a reader?{" "}
+            <Link to="/login" className="text-[#0A0A0A] link-underline">
+              Sign in
+            </Link>
+            .
+          </p>
+
+          <form onSubmit={handleSubmit} className="mt-10 space-y-5">
+            <Field
+              id="name"
+              label="Full name"
+              icon={FiUser}
+              value={form.name}
+              onChange={set("name")}
+              required
+              placeholder="Ayesha Rahman"
+              autoComplete="name"
+            />
+            <Field
+              id="email"
+              label="Email"
+              type="email"
+              icon={FiMail}
+              value={form.email}
+              onChange={set("email")}
+              required
+              placeholder="you@example.com"
+              autoComplete="email"
+            />
+            <Field
+              id="photoURL"
+              label="Profile picture URL (optional)"
+              type="url"
+              icon={FiImage}
+              value={form.photoURL}
+              onChange={set("photoURL")}
+              placeholder="https://…"
+              autoComplete="url"
+            />
             <div>
-              <label htmlFor="name" className="block text-sm font-medium text-slate-200">
-                Full Name
-              </label>
-              <div className="mt-1 relative rounded-md shadow-sm">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <FaUser className="h-5 w-5 text-slate-400" />
-                </div>
-                <input
-                  id="name"
-                  type="text"
-                  placeholder="Enter your full name"
-                  className="pl-10 block w-full px-4 py-3 border border-slate-700 rounded-lg focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 bg-slate-800 text-slate-100"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  required
-                />
-              </div>
-            </div>
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-slate-200">
-                Email Address
-              </label>
-              <div className="mt-1 relative rounded-md shadow-sm">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <FaEnvelope className="h-5 w-5 text-slate-400" />
-                </div>
-                <input
-                  id="email"
-                  type="email"
-                  placeholder="you@example.com"
-                  className="pl-10 block w-full px-4 py-3 border border-slate-700 rounded-lg focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 bg-slate-800 text-slate-100"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                />
-              </div>
-            </div>
-            <div>
-              <label htmlFor="photoURL" className="block text-sm font-medium text-slate-200">
-                Profile Picture URL (Optional)
-              </label>
-              <div className="mt-1 relative rounded-md shadow-sm">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <FaImage className="h-5 w-5 text-slate-400" />
-                </div>
-                <input
-                  id="photoURL"
-                  type="url"
-                  placeholder="https://example.com/your-photo.jpg"
-                  className="pl-10 block w-full px-4 py-3 border border-slate-700 rounded-lg focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 bg-slate-800 text-slate-100"
-                  value={photoURL}
-                  onChange={(e) => setPhotoURL(e.target.value)}
-                />
-              </div>
-            </div>
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-slate-200">
-                Password
-              </label>
-              <div className="mt-1 relative rounded-md shadow-sm">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <FaLock className="h-5 w-5 text-slate-400" />
-                </div>
-                <input
-                  id="password"
-                  type={showPassword ? "text" : "password"}
-                  placeholder="••••••••"
-                  className="pl-10 block w-full px-4 py-3 border border-slate-700 rounded-lg focus:ring-2 focus:ring-emerald-400 focus:border-emerald-400 bg-slate-800 text-slate-100"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  pattern="^(?=.*[a-z])(?=.*[A-Z]).{6,}$"
-                  title="Password must contain at least one uppercase letter, one lowercase letter, and be at least 6 characters long"
-                />
-                <div
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
-                  onClick={togglePasswordVisibility}
-                >
-                  {showPassword ? (
-                    <FaEyeSlash className="h-5 w-5 text-slate-400 hover:text-slate-200" />
-                  ) : (
-                    <FaEye className="h-5 w-5 text-slate-400 hover:text-slate-200" />
-                  )}
-                </div>
-              </div>
-              <p className="mt-1 text-xs text-slate-400">
-                Password must be at least 6 characters with uppercase and lowercase letters
+              <Field
+                id="password"
+                label="Password"
+                type={showPassword ? "text" : "password"}
+                icon={FiLock}
+                value={form.password}
+                onChange={set("password")}
+                required
+                placeholder="At least 6 characters"
+                pattern="^(?=.*[a-z])(?=.*[A-Z]).{6,}$"
+                title="Password must contain at least one uppercase letter, one lowercase letter, and be at least 6 characters long"
+                autoComplete="new-password"
+                rightSlot={
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((v) => !v)}
+                    className="p-2 text-[#9A9A95] hover:text-[#0A0A0A]"
+                    aria-label={showPassword ? "Hide password" : "Show password"}
+                  >
+                    {showPassword ? <FiEyeOff size={14} /> : <FiEye size={14} />}
+                  </button>
+                }
+              />
+              <p className="mt-2 ml-1 text-[11px] font-mono text-[#6B6B6B]">
+                Min. 6 chars, one uppercase, one lowercase.
               </p>
             </div>
-          </div>
-          <div>
+
             <button
               type="submit"
               disabled={loading}
-              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-semibold rounded-xl text-white bg-gradient-to-r from-emerald-500 to-sky-400 hover:from-emerald-600 hover:to-sky-500 focus:outline-none focus:ring-2 focus:ring-emerald-400 transition-all duration-200 cursor-pointer"
+              className="w-full h-12 rounded-full bg-[#FF4A1C] text-white text-[14px] font-medium hover:bg-[#0A0A0A] transition-colors disabled:opacity-60 inline-flex items-center justify-center gap-2"
             >
-              {loading ? (
-                <span className="flex items-center">
-                  <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                  </svg>
-                  Creating account...
-                </span>
-              ) : (
-                'Create Account'
-              )}
+              {loading ? "Creating account…" : "Create account"}
+              {!loading && <FiArrowUpRight size={14} />}
             </button>
+          </form>
+
+          <div className="mt-8 flex items-center gap-3">
+            <div className="flex-1 h-px bg-[#E5E5E0]" />
+            <span className="font-mono text-[10px] tracking-widest uppercase text-[#6B6B6B]">
+              or
+            </span>
+            <div className="flex-1 h-px bg-[#E5E5E0]" />
           </div>
-        </form>
-        <div className="mt-6">
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-slate-700"></div>
-            </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-slate-900 text-slate-400">Or continue with</span>
-            </div>
-          </div>
-          <div className="mt-6">
-            <button
-              type="button"
-              onClick={handleGoogleLogin}
-              disabled={loading}
-              className="w-full flex items-center justify-center px-4 py-3 border border-slate-700 rounded-xl shadow-sm text-sm font-semibold text-slate-100 bg-slate-800 hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-400 transition-all duration-200 cursor-pointer"
-            >
-              <FcGoogle className="w-5 h-5 mr-2" />
-              <span>Continue with Google</span>
-            </button>
-          </div>
-        </div>
-        <div className="text-center mt-6">
-          <p className="text-sm text-slate-400">
-            Already have an account?{' '}
-            <Link to="/login" className="font-medium text-emerald-400 hover:text-emerald-300">
-              Sign in
-            </Link>
-          </p>
-        </div>
+
+          <button
+            type="button"
+            onClick={handleGoogle}
+            disabled={loading}
+            className="mt-5 w-full h-12 rounded-full bg-white border border-[#0A0A0A] text-[#0A0A0A] text-[14px] font-medium hover:bg-[#0A0A0A] hover:text-white transition-colors inline-flex items-center justify-center gap-2"
+          >
+            <FcGoogle size={18} /> Continue with Google
+          </button>
+        </motion.div>
       </div>
     </div>
   );
-};
-
-export default Register;
+}

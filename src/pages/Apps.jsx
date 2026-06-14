@@ -1,170 +1,403 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
-import { useLoaderData } from 'react-router';
-import AppCard from '../components/AppCard';
-import { FaChevronLeft, FaChevronRight, FaFire, FaRocket } from 'react-icons/fa';
-import Button2 from '../components/Button2';
+import { useMemo, useState } from "react";
+import { useLoaderData, Link } from "react-router";
+import { motion, AnimatePresence } from "framer-motion";
+import { FiSearch, FiSliders, FiX, FiArrowUpRight } from "react-icons/fi";
+import AppCard from "../components/AppCard";
+import { Eyebrow, PageHeader } from "../components/Section";
+import PrimaryButton from "../components/Button2";
 
-const NAVBAR_HEIGHT = 72;
+const SORTS = [
+  { value: "rating", label: "Top rated" },
+  { value: "downloads", label: "Most downloaded" },
+  { value: "updated", label: "Recently updated" },
+  { value: "name", label: "A — Z" },
+];
 
-const Apps = () => {
-  const appsData = useLoaderData();
+const FILTERS = [
+  { value: "all", label: "All apps" },
+  { value: "free", label: "Free" },
+  { value: "paid", label: "Paid" },
+];
 
-  const [apps, setApps] = useState([]);
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [isLoading, setIsLoading] = useState(true);
-  const slidesRef = useRef([]);
+const EMPTY = [];
 
-  useEffect(() => {
-    setApps(appsData);
-    setIsLoading(false);
-  }, [appsData]);
+export default function Apps() {
+  const loaded = useLoaderData();
+  const appsData = useMemo(() => loaded || EMPTY, [loaded]);
 
-  const trendingApps = [...apps].sort((a, b) => b.rating - a.rating).slice(0, 4);
-  const categories = [...new Set(apps.map(app => app.category))];
-  const sliderApps = apps.slice(0, 3);
+  const [search, setSearch] = useState("");
+  const [activeCategory, setActiveCategory] = useState("All");
+  const [sort, setSort] = useState("rating");
+  const [filter, setFilter] = useState("all");
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
-  const nextSlide = useCallback(() => {
-    if (sliderApps.length === 0) return;
-    setCurrentSlide((prev) => (prev + 1) % sliderApps.length);
-  }, [sliderApps.length]);
+  const categories = useMemo(
+    () => ["All", ...Array.from(new Set(appsData.map((a) => a.category)))],
+    [appsData]
+  );
 
-  const prevSlide = useCallback(() => {
-    if (sliderApps.length === 0) return;
-    setCurrentSlide((prev) => (prev - 1 + sliderApps.length) % sliderApps.length);
-  }, [sliderApps.length]);
+  const filtered = useMemo(() => {
+    let list = appsData;
+    if (activeCategory !== "All") list = list.filter((a) => a.category === activeCategory);
+    if (filter === "free") list = list.filter((a) => a.price === "Free");
+    if (filter === "paid") list = list.filter((a) => a.price && a.price !== "Free");
+    if (search.trim()) {
+      const q = search.toLowerCase();
+      list = list.filter(
+        (a) =>
+          a.name?.toLowerCase().includes(q) ||
+          a.developer?.toLowerCase().includes(q) ||
+          a.description?.toLowerCase().includes(q)
+      );
+    }
+    const sorted = [...list];
+    if (sort === "rating") sorted.sort((a, b) => b.rating - a.rating);
+    if (sort === "downloads") sorted.sort((a, b) => b.downloads - a.downloads);
+    if (sort === "updated")
+      sorted.sort((a, b) => new Date(b.updated) - new Date(a.updated));
+    if (sort === "name") sorted.sort((a, b) => a.name.localeCompare(b.name));
+    return sorted;
+  }, [appsData, activeCategory, sort, filter, search]);
 
-  useEffect(() => {
-    if (sliderApps.length === 0) return;
-    const interval = setInterval(nextSlide, 5000);
-    return () => clearInterval(interval);
-  }, [nextSlide, sliderApps.length]);
+  const trending = useMemo(
+    () => [...appsData].sort((a, b) => b.rating * Math.log10(b.downloads + 10) - a.rating * Math.log10(a.downloads + 10)).slice(0, 3),
+    [appsData]
+  );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 text-slate-100 pb-16" style={{ paddingTop: `${NAVBAR_HEIGHT + 24}px` }}>
-      <div className="max-w-7xl mx-auto px-4">
-        {/* Slider Section */}
-        <div className="relative h-[500px] mb-20 rounded-3xl overflow-hidden shadow-2xl">
-          {isLoading ? (
-            <div className="h-full w-full animate-pulse bg-slate-800 flex flex-col items-center justify-end p-8">
-              <div className="w-2/3 h-8 bg-slate-700 rounded mb-4"></div>
-              <div className="w-1/2 h-6 bg-slate-700 rounded mb-6"></div>
-              <div className="w-32 h-10 bg-slate-700 rounded"></div>
+    <div className="bg-[#FAFAF7]">
+      {/* Header */}
+      <section className="pt-16 sm:pt-24 pb-12 sm:pb-16">
+        <div className="max-w-7xl mx-auto px-6 lg:px-10">
+          <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8">
+            <PageHeader
+              eyebrow="— The library / Issue 01"
+              title="Every app"
+              italic="we stock."
+              description="A complete index of the apps in our library. Filter by category, sort by signal, search for a name."
+            />
+            <div className="flex items-center gap-2 text-[11px] font-mono text-[#6B6B6B] tracking-widest">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#FF4A1C]" />
+              {filtered.length} of {appsData.length} apps
             </div>
-          ) : sliderApps.length > 0 ? (
-            <>
-              {/* Slides */}
-              <div className="h-full relative overflow-hidden">
-                {sliderApps.map((app, index) => (
-                  <div
-                    key={app.id}
-                    ref={el => slidesRef.current[index] = el}
-                    className={`absolute inset-0 w-full h-full transition-all duration-700 ease-in-out ${index === currentSlide
-                      ? 'opacity-100 translate-x-0 z-10'
-                      : index < currentSlide
-                        ? 'opacity-0 -translate-x-full z-0'
-                        : 'opacity-0 translate-x-full z-0'
-                      }`}
-                  >
-                    <img
-                      src={app.banner || app.thumbnail}
-                      alt={app.name}
-                      className="w-full h-full object-cover opacity-80"
-                      onError={(e) => {
-                        e.target.onerror = null;
-                        e.target.src = 'https://via.placeholder.com/1200x400?text=App+Banner';
-                      }}
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent flex items-end px-8 pb-12">
-                      <div className="text-left text-white w-full md:w-2/3">
-                        <h2 className="text-4xl md:text-5xl font-extrabold mb-4 font-inter drop-shadow-lg">{app.name}</h2>
-                        <p className="text-lg md:text-xl mb-6 line-clamp-2 text-slate-200">{app.description}</p>
-                        <Button2 text="View Details" className="text-lg" to={`/apps/${app.id}`} />
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Indicators */}
-              <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-3 z-20">
-                {sliderApps.map((_, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setCurrentSlide(index)}
-                    className={`w-2 h-2 rounded-full transition-all ${index === currentSlide
-                      ? 'bg-emerald-400 w-8'
-                      : 'bg-white/50 hover:bg-emerald-400/80'
-                      }`}
-                    aria-label={`Go to slide ${index + 1}`}
-                  ></button>
-                ))}
-              </div>
-
-              {/* Navigation Buttons */}
-              <button
-                onClick={prevSlide}
-                className="absolute left-6 top-1/2 transform -translate-y-1/2 z-20 bg-black/40 hover:bg-black/60 text-white w-10 h-10 rounded-full flex items-center justify-center transition-all focus:outline-none"
-                aria-label="Previous slide"
-              >
-                <FaChevronLeft className="w-5 h-5" />
-              </button>
-              <button
-                onClick={nextSlide}
-                className="absolute right-6 top-1/2 transform -translate-y-1/2 z-20 bg-black/40 hover:bg-black/60 text-white w-10 h-10 rounded-full flex items-center justify-center transition-all focus:outline-none"
-                aria-label="Next slide"
-              >
-                <FaChevronRight className="w-5 h-5" />
-              </button>
-            </>
-          ) : (
-            <div className="h-full flex items-center justify-center bg-slate-800">
-              <p className="text-slate-400 font-medium">No featured apps available</p>
-            </div>
-          )}
+          </div>
         </div>
+      </section>
 
-        {/* Trending Apps Section with Icon */}
-        <section className="mb-16">
-          <div className="flex items-center mb-6">
-            <FaFire className="text-amber-400 mr-3 text-2xl" />
-            <h2 className="text-3xl md:text-4xl font-bold font-inter text-slate-100">Trending Apps</h2>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {trendingApps.map(app => (
-              <AppCard key={app.id} app={app} />
-            ))}
-          </div>
-        </section>
-
-        {/* Apps by Category */}
-        {categories.map(category => (
-          <section key={category} className="mb-20">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6 font-inter text-slate-100">{category}</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-              {apps
-                .filter(app => app.category === category)
-                .map(app => (
-                  <AppCard key={app.id} app={app} />
-                ))}
+      {/* Editorial strip: trending */}
+      <section className="bg-[#0A0A0A] text-[#FAFAF7] noise py-12 sm:py-16">
+        <div className="relative max-w-7xl mx-auto px-6 lg:px-10">
+          <div className="flex items-end justify-between mb-8">
+            <div>
+              <p className="font-mono text-[11px] tracking-[0.2em] uppercase text-white/50">
+                — On rotation
+              </p>
+              <h2 className="mt-3 font-display text-3xl sm:text-4xl tracking-tight">
+                Trending <span className="italic text-[#FF4A1C]">this week.</span>
+              </h2>
             </div>
-          </section>
-        ))}
-
-        {/* New Releases Section with Icon */}
-        <section className="mb-20">
-          <div className="flex items-center mb-6">
-            <FaRocket className="text-sky-400 mr-3 text-2xl" />
-            <h2 className="text-3xl md:text-4xl font-bold font-inter text-slate-100">New Releases</h2>
+            <Link
+              to="/featured"
+              className="hidden sm:inline-flex items-center gap-1.5 text-[12px] font-mono tracking-widest uppercase text-white/70 hover:text-white"
+            >
+              All featured <FiArrowUpRight size={12} />
+            </Link>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {apps.slice(0, 4).map(app => (
-              <AppCard key={app.id} app={app} />
+          <div className="grid sm:grid-cols-3 gap-6">
+            {trending.map((app, i) => (
+              <Link
+                key={app.id}
+                to={`/apps/${app.id}`}
+                className="group relative overflow-hidden rounded-2xl border border-white/10 hover:border-[#FF4A1C] transition-colors"
+              >
+                <div className="aspect-[5/3] overflow-hidden bg-[#1A1A1A]">
+                  <img
+                    src={app.thumbnail}
+                    alt={app.name}
+                    className="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700"
+                  />
+                </div>
+                <div className="p-5">
+                  <p className="font-mono text-[10px] tracking-widest uppercase text-white/40">
+                    0{i + 1} / Trending
+                  </p>
+                  <h3 className="mt-2 font-display text-xl tracking-tight">{app.name}</h3>
+                  <p className="mt-1 text-[12px] text-white/50 font-mono">{app.developer}</p>
+                </div>
+              </Link>
             ))}
           </div>
-        </section>
-      </div>
+        </div>
+      </section>
+
+      {/* Toolbar + Grid */}
+      <section className="py-16 sm:py-24">
+        <div className="max-w-7xl mx-auto px-6 lg:px-10">
+          <div className="grid lg:grid-cols-12 gap-10">
+            {/* Sidebar (desktop) */}
+            <aside className="lg:col-span-3 hidden lg:block">
+              <div className="sticky top-28 space-y-10">
+                <div>
+                  <Eyebrow>— Search</Eyebrow>
+                  <div className="mt-3 relative">
+                    <FiSearch
+                      size={14}
+                      className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#6B6B6B]"
+                    />
+                    <input
+                      type="text"
+                      placeholder="Find an app…"
+                      value={search}
+                      onChange={(e) => setSearch(e.target.value)}
+                      className="w-full h-11 pl-9 pr-3 rounded-full bg-white border border-[#E5E5E0] text-[14px] text-[#0A0A0A] placeholder:text-[#9A9A95] outline-none focus:border-[#0A0A0A] transition-colors"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <Eyebrow>— Categories</Eyebrow>
+                  <ul className="mt-3 space-y-1">
+                    {categories.map((c) => {
+                      const count =
+                        c === "All"
+                          ? appsData.length
+                          : appsData.filter((a) => a.category === c).length;
+                      const active = activeCategory === c;
+                      return (
+                        <li key={c}>
+                          <button
+                            onClick={() => setActiveCategory(c)}
+                            className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-[13.5px] transition-all ${
+                              active
+                                ? "bg-[#0A0A0A] text-[#FAFAF7]"
+                                : "text-[#0A0A0A] hover:bg-[#F1EFE8]"
+                            }`}
+                          >
+                            <span>{c}</span>
+                            <span
+                              className={`font-mono text-[10px] tracking-widest ${
+                                active ? "text-white/50" : "text-[#9A9A95]"
+                              }`}
+                            >
+                              {String(count).padStart(2, "0")}
+                            </span>
+                          </button>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+
+                <div>
+                  <Eyebrow>— Price</Eyebrow>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    {FILTERS.map((f) => (
+                      <button
+                        key={f.value}
+                        onClick={() => setFilter(f.value)}
+                        className={`px-3 h-9 rounded-full text-[12px] tracking-tight transition-colors ${
+                          filter === f.value
+                            ? "bg-[#0A0A0A] text-[#FAFAF7]"
+                            : "bg-white border border-[#E5E5E0] text-[#0A0A0A] hover:border-[#0A0A0A]"
+                        }`}
+                      >
+                        {f.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </aside>
+
+            {/* Main */}
+            <div className="lg:col-span-9">
+              {/* Mobile filter bar */}
+              <div className="lg:hidden flex items-center gap-2 mb-6">
+                <div className="flex-1 relative">
+                  <FiSearch
+                    size={14}
+                    className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#6B6B6B]"
+                  />
+                  <input
+                    type="text"
+                    placeholder="Find an app…"
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    className="w-full h-11 pl-9 pr-3 rounded-full bg-white border border-[#E5E5E0] text-[14px] text-[#0A0A0A] placeholder:text-[#9A9A95] outline-none focus:border-[#0A0A0A]"
+                  />
+                </div>
+                <button
+                  onClick={() => setMobileFiltersOpen(true)}
+                  className="h-11 w-11 rounded-full bg-[#0A0A0A] text-white flex items-center justify-center"
+                  aria-label="Filters"
+                >
+                  <FiSliders size={16} />
+                </button>
+              </div>
+
+              <div className="flex items-center justify-between mb-8 gap-4 flex-wrap">
+                <div className="flex items-center gap-2 overflow-x-auto pb-1 -mx-1 px-1">
+                  {categories.map((c) => {
+                    const active = activeCategory === c;
+                    return (
+                      <button
+                        key={c}
+                        onClick={() => setActiveCategory(c)}
+                        className={`flex-shrink-0 px-3.5 h-9 rounded-full text-[12.5px] tracking-tight transition-colors ${
+                          active
+                            ? "bg-[#0A0A0A] text-[#FAFAF7]"
+                            : "bg-white border border-[#E5E5E0] text-[#0A0A0A] hover:border-[#0A0A0A]"
+                        }`}
+                      >
+                        {c}
+                      </button>
+                    );
+                  })}
+                </div>
+                <div className="flex items-center gap-2 ml-auto">
+                  <span className="font-mono text-[10px] tracking-widest uppercase text-[#6B6B6B] hidden sm:inline">
+                    Sort
+                  </span>
+                  <select
+                    value={sort}
+                    onChange={(e) => setSort(e.target.value)}
+                    className="h-9 px-3 pr-7 rounded-full bg-white border border-[#E5E5E0] text-[12.5px] text-[#0A0A0A] outline-none focus:border-[#0A0A0A] appearance-none cursor-pointer"
+                    style={{
+                      backgroundImage:
+                        'url(\'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="6" viewBox="0 0 10 6" fill="none"><path d="M1 1l4 4 4-4" stroke="%230A0A0A" stroke-width="1.5" stroke-linecap="round"/></svg>\')',
+                      backgroundRepeat: "no-repeat",
+                      backgroundPosition: "right 0.7rem center",
+                    }}
+                  >
+                    {SORTS.map((s) => (
+                      <option key={s.value} value={s.value}>
+                        {s.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              <AnimatePresence mode="wait">
+                {filtered.length === 0 ? (
+                  <motion.div
+                    key="empty"
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -8 }}
+                    className="border border-dashed border-[#E5E5E0] rounded-2xl p-16 text-center"
+                  >
+                    <p className="font-display text-2xl tracking-tight">
+                      Nothing in stock.
+                    </p>
+                    <p className="mt-2 text-[13px] text-[#6B6B6B]">
+                      Try a different category or clear your search.
+                    </p>
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key={activeCategory + sort + filter + search}
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -8 }}
+                    transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                    className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-x-6 gap-y-12"
+                  >
+                    {filtered.map((app, i) => (
+                      <AppCard key={app.id} app={app} index={i} />
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="border-t border-[#0A0A0A] py-20 sm:py-28">
+        <div className="max-w-4xl mx-auto px-6 lg:px-10 text-center">
+          <Eyebrow>— Don't see what you need?</Eyebrow>
+          <h2 className="mt-4 font-display text-4xl sm:text-5xl leading-[1.05] tracking-tight">
+            Tell us what you're <span className="italic text-[#FF4A1C]">looking for.</span>
+          </h2>
+          <p className="mt-5 text-[15px] text-[#6B6B6B] max-w-md mx-auto">
+            We add to the library every Friday. Drop a note and we'll add it to the next shortlist.
+          </p>
+          <div className="mt-8">
+            <PrimaryButton text="Request an app" to="/contact" />
+          </div>
+        </div>
+      </section>
+
+      {/* Mobile filters sheet */}
+      <AnimatePresence>
+        {mobileFiltersOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="lg:hidden fixed inset-0 z-[80] bg-[#FAFAF7]"
+          >
+            <div className="flex items-center justify-between px-6 h-16 border-b border-[#E5E5E0]">
+              <p className="font-display text-lg tracking-tight">Filters</p>
+              <button
+                onClick={() => setMobileFiltersOpen(false)}
+                className="p-2 -mr-2"
+                aria-label="Close"
+              >
+                <FiX size={20} />
+              </button>
+            </div>
+            <div className="p-6 space-y-8 overflow-y-auto h-[calc(100vh-4rem)]">
+              <div>
+                <Eyebrow>— Category</Eyebrow>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {categories.map((c) => {
+                    const active = activeCategory === c;
+                    return (
+                      <button
+                        key={c}
+                        onClick={() => setActiveCategory(c)}
+                        className={`px-3.5 h-9 rounded-full text-[12.5px] ${
+                          active
+                            ? "bg-[#0A0A0A] text-[#FAFAF7]"
+                            : "bg-white border border-[#E5E5E0] text-[#0A0A0A]"
+                        }`}
+                      >
+                        {c}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+              <div>
+                <Eyebrow>— Price</Eyebrow>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {FILTERS.map((f) => (
+                    <button
+                      key={f.value}
+                      onClick={() => setFilter(f.value)}
+                      className={`px-3 h-9 rounded-full text-[12.5px] ${
+                        filter === f.value
+                          ? "bg-[#0A0A0A] text-[#FAFAF7]"
+                          : "bg-white border border-[#E5E5E0] text-[#0A0A0A]"
+                      }`}
+                    >
+                      {f.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <PrimaryButton
+                text="Show results"
+                onClick={() => setMobileFiltersOpen(false)}
+                className="w-full justify-center"
+              />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
-};
-
-export default Apps;
+}

@@ -10,7 +10,7 @@ import './index.css';
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <AuthProvider>
-      <ToastContainer position="top-center" />
+      <ToastContainer position="top-right" />
       <RouterProvider router={router} />
     </AuthProvider>
   </React.StrictMode>

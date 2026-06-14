@@ -1,164 +1,415 @@
-// Modern, visually appealing Home component with dark theme, stats, testimonials, and brand cohesion.
-import { useLoaderData } from 'react-router';
-import bannerImage from '../assets/banner.png';
-import Button2 from '../components/Button2';
-import Features from '../components/Features';
-import { FiUsers, FiLayers, FiStar, FiCode } from 'react-icons/fi';
+import { useLoaderData, Link } from "react-router";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { useRef } from "react";
+import {
+  FiArrowUpRight,
+  FiSearch,
+  FiCommand,
+  FiStar,
+  FiDownload,
+} from "react-icons/fi";
+import CountUp from "react-countup";
+import PrimaryButton from "../components/Button2";
+import AppCard from "../components/AppCard";
+import { StarRating } from "../components/Rating";
+import Features from "../components/Features";
 
-const stats = [
-    { icon: <FiUsers size={28} />, label: 'Active Users', value: '120K+' },
-    { icon: <FiLayers size={28} />, label: 'App Categories', value: '24' },
-    { icon: <FiStar size={28} />, label: 'Reviews', value: '58K+' },
-    { icon: <FiCode size={28} />, label: 'Developers', value: '1.2K+' },
+const CATEGORIES = [
+  "Education",
+  "Productivity",
+  "Gaming",
+  "Health",
+  "Finance",
+  "Design",
+  "Music",
+  "Photography",
+  "Utilities",
+  "Lifestyle",
 ];
 
-const testimonials = [
-    {
-        name: 'Ayesha Rahman',
-        avatar: 'https://randomuser.me/api/portraits/women/44.jpg',
-        quote: 'AppTrail helped me discover amazing productivity tools I never knew existed!',
-        rating: 5,
-    },
-    {
-        name: 'Tanvir Hasan',
-        avatar: 'https://randomuser.me/api/portraits/men/32.jpg',
-        quote: 'The reviews and recommendations are spot on. My go-to app discovery platform.',
-        rating: 5,
-    },
-    {
-        name: 'Sadia Islam',
-        avatar: 'https://randomuser.me/api/portraits/women/68.jpg',
-        quote: 'I love the clean interface and how easy it is to find new apps.',
-        rating: 4,
-    },
+const TESTIMONIALS = [
+  {
+    name: "Ayesha Rahman",
+    role: "Designer, Dhaka",
+    avatar: "https://randomuser.me/api/portraits/women/44.jpg",
+    quote:
+      "AppTrail helped me discover three tools that have genuinely changed how I work. I haven't opened the App Store in months.",
+  },
+  {
+    name: "Tanvir Hasan",
+    role: "Engineer, Berlin",
+    avatar: "https://randomuser.me/api/portraits/men/32.jpg",
+    quote:
+      "The reviews are honest, the curation is sharp, and the interface is the cleanest I've seen in the space. A genuine reference.",
+  },
+  {
+    name: "Sadia Islam",
+    role: "Writer, Toronto",
+    avatar: "https://randomuser.me/api/portraits/women/68.jpg",
+    quote:
+      "I love that AppTrail feels like a magazine, not a marketplace. It treats apps as artifacts, not commodities.",
+  },
 ];
 
-const Home = () => {
-    const appsData = useLoaderData();
-    const featuredApps = appsData.slice(0, 3);
+const STATS = [
+  { value: 120, suffix: "K+", label: "Active readers" },
+  { value: 24, suffix: "", label: "Categories" },
+  { value: 58, suffix: "K+", label: "Reviews written" },
+  { value: 1200, suffix: "+", label: "Apps in library" },
+];
 
-    return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 text-slate-100">
-            {/* Hero Section */}
-            <section
-                className="relative flex flex-col justify-center items-center min-h-[600px] py-16 px-4 text-center overflow-hidden"
-            >
-                <img
-                    src={bannerImage}
-                    alt="Banner"
-                    className="absolute inset-0 w-full h-full object-cover opacity-20 pointer-events-none"
-                />
-                <div className="relative z-10 max-w-3xl mx-auto">
-                    <h1 className="text-5xl md:text-6xl font-extrabold mb-8 bg-gradient-to-r from-emerald-400 via-sky-400 to-indigo-500 bg-clip-text text-transparent drop-shadow-lg font-inter animate-fade-in">
-                        Discover Your Next Favorite App
-                    </h1>
-                    <p className="text-xl md:text-2xl mb-10 text-slate-200 font-medium animate-fade-in delay-100">
-                        Explore, review, and install the best apps for every need. Curated by users, for users.
-                    </p>
-                    <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in delay-200">
-                        <Button2 text="Explore Apps" className="text-lg" to="/apps" />
-                        <Button2 text="Join Community" className="text-lg bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-100" to="/register" />
-                    </div>
-                </div>
-            </section>
-
-            {/* Stats Section */}
-            <section className="max-w-5xl mx-auto px-4 py-12 grid grid-cols-2 md:grid-cols-4 gap-8">
-                {stats.map((stat) => (
-                    <div
-                        key={stat.label}
-                        className="flex flex-col items-center bg-slate-800 rounded-2xl shadow-lg p-6 hover:scale-105 hover:shadow-emerald-500/20 transition-all duration-300"
-                    >
-                        <div className="mb-3 text-emerald-400">{stat.icon}</div>
-                        <div className="text-2xl font-bold text-slate-100">{stat.value}</div>
-                        <div className="text-sm text-slate-400 mt-1">{stat.label}</div>
-                    </div>
-                ))}
-            </section>
-
-            {/* Featured Apps Section */}
-            <section className="max-w-7xl mx-auto px-4 py-16">
-                <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 font-inter text-slate-100">Featured Apps</h2>        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    {featuredApps.map(app => (
-                        <div
-                            key={app.id}
-                            className="group bg-slate-900 border border-slate-800 rounded-2xl shadow-xl overflow-hidden hover:shadow-emerald-500/20 transition-all duration-300 flex flex-col"
-                        >
-                            <figure className="relative">
-                                <img src={app.banner} alt={app.name} className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300" />
-                                <span className="absolute top-4 left-4 bg-emerald-500 text-xs font-bold px-3 py-1 rounded-full shadow text-white uppercase tracking-wide">
-                                    {app.category || 'App'}
-                                </span>
-                            </figure>
-                            <div className="p-6 flex flex-col flex-grow">
-                                <div className="flex-grow">
-                                    <h3 className="font-inter text-xl font-bold text-slate-100 mb-2">{app.name}</h3>
-                                    <p className="text-slate-400 mb-2">Dev: {app.developer}</p>
-                                    <p className="text-slate-300 text-base mb-4">{app.description}</p>
-                                </div>
-                                <div className="flex justify-between items-center mt-auto">
-                                    <Button2 text="Learn More" to={`/apps/${app.id}`} />
-                                    <span className="text-amber-400 font-bold">{'★'.repeat(app.rating || 4)}</span>
-                                </div>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            </section>
-
-            {/* Features Section */}
-            <section className="max-w-7xl mx-auto px-4 py-16">
-                <Features />
-            </section>
-
-            {/* Testimonials Section */}
-            <section className="max-w-5xl mx-auto px-4 py-16">
-                <h2 className="text-3xl md:text-4xl font-bold text-center mb-12 font-inter text-slate-100">What Users Say</h2>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    {testimonials.map((t) => (
-                        <div
-                            key={t.name}
-                            className="bg-slate-900 border border-slate-800 rounded-2xl shadow-lg p-8 flex flex-col items-center text-center hover:scale-105 hover:shadow-emerald-500/20 transition-all duration-300"
-                        >
-                            <img src={t.avatar} alt={t.name} className="w-16 h-16 rounded-full mb-4 border-2 border-emerald-400 shadow" />
-                            <blockquote className="italic text-slate-200 mb-4">&ldquo;{t.quote}&rdquo;</blockquote>
-                            <div className="flex gap-1 mb-2">
-                                {Array.from({ length: t.rating }).map((_, i) => (
-                                    <span key={i} className="text-amber-400 text-lg">★</span>
-                                ))}
-                            </div>
-                            <div className="font-bold text-emerald-400">{t.name}</div>
-                        </div>
-                    ))}
-                </div>
-            </section>
-
-            {/* Call-to-Action Section */}
-            <section className="max-w-3xl mx-auto px-4 py-16 text-center">
-                <h2 className="text-3xl md:text-4xl font-bold mb-6 font-inter text-slate-100">Ready to get started?</h2>
-                <p className="text-lg text-slate-300 mb-8">
-                    Join AppTrail today and discover the best apps for your needs. Stay updated with our newsletter!
-                </p>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                    <Button2 text="Sign Up Free" className="text-lg" to="/register" />
-                    <Button2 text="Subscribe Newsletter" className="text-lg bg-slate-800 hover:bg-slate-700 border border-slate-600 text-slate-100" to="/newsletter" />
-                </div>
-            </section>
-
-            {/* Animations */}
-            <style>{`
-        .animate-fade-in {
-          animation: fadeIn 0.8s cubic-bezier(.4,0,.2,1) both;
-        }
-        .delay-100 { animation-delay: 0.1s; }
-        .delay-200 { animation-delay: 0.2s; }
-        @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(24px);}
-          to { opacity: 1; transform: translateY(0);}
-        }
-      `}</style>
-        </div>
-    );
+const item = {
+  hidden: { opacity: 0, y: 24 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] } },
 };
 
-export default Home;
+function Eyebrow({ children, className = "" }) {
+  return (
+    <p
+      className={`font-mono text-[11px] tracking-[0.2em] uppercase text-[#6B6B6B] ${className}`}
+    >
+      {children}
+    </p>
+  );
+}
+
+function Hero() {
+  const ref = useRef(null);
+  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
+  const y1 = useTransform(scrollYProgress, [0, 1], [0, -60]);
+  const y2 = useTransform(scrollYProgress, [0, 1], [0, -100]);
+  const rotate = useTransform(scrollYProgress, [0, 1], [0, 8]);
+
+  return (
+    <section ref={ref} className="relative pt-12 sm:pt-20 pb-20 sm:pb-32 overflow-hidden">
+      <div className="max-w-7xl mx-auto px-6 lg:px-10">
+        <div className="grid lg:grid-cols-12 gap-10 items-end">
+          <div className="lg:col-span-7">
+            <motion.div
+              initial="hidden"
+              animate="show"
+              variants={{ show: { transition: { staggerChildren: 0.08 } } }}
+            >
+              <motion.div variants={item}>
+                <Eyebrow>— Issue 01 / App discovery, refined</Eyebrow>
+              </motion.div>
+              <motion.h1
+                variants={item}
+                className="mt-5 font-display text-[clamp(2.5rem,7vw,5.75rem)] leading-[0.95] tracking-[-0.02em] text-[#0A0A0A]"
+              >
+                The apps
+                <br />
+                <span className="italic text-[#FF4A1C]">worth your</span>
+                <br />
+                attention.
+              </motion.h1>
+              <motion.p
+                variants={item}
+                className="mt-7 max-w-lg text-[16px] leading-relaxed text-[#6B6B6B]"
+              >
+                AppTrail is a curated journal of the tools we use, the ones we don't, and the
+                ones we keep coming back to. No auctions. No algorithmic sludge.
+              </motion.p>
+              <motion.div variants={item} className="mt-9 flex flex-col sm:flex-row gap-3">
+                <PrimaryButton text="Explore apps" to="/apps" />
+                <PrimaryButton text="Start reading" to="/featured" variant="ghost" />
+              </motion.div>
+              <motion.div
+                variants={item}
+                className="mt-10 flex items-center gap-4 text-[12px] font-mono text-[#6B6B6B]"
+              >
+                <div className="flex -space-x-2">
+                  {TESTIMONIALS.map((t) => (
+                    <img
+                      key={t.name}
+                      src={t.avatar}
+                      alt=""
+                      className="w-7 h-7 rounded-full border-2 border-[#FAFAF7] object-cover"
+                    />
+                  ))}
+                </div>
+                <span>
+                  Joined this week by <span className="text-[#0A0A0A]">2,184 readers</span>
+                </span>
+              </motion.div>
+            </motion.div>
+          </div>
+
+          {/* Hero visual */}
+          <motion.div
+            style={{ y: y1 }}
+            className="lg:col-span-5 relative h-[420px] sm:h-[520px] hidden lg:block"
+          >
+            <div className="absolute inset-0 rounded-3xl border border-[#E5E5E0] bg-white overflow-hidden">
+              <div className="absolute top-5 left-5 right-5 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-[#FF4A1C]" />
+                  <span className="font-mono text-[10px] tracking-widest text-[#6B6B6B]">
+                    APPS / FEATURED
+                  </span>
+                </div>
+                <span className="font-mono text-[10px] text-[#9A9A95]">2026.06</span>
+              </div>
+              <div className="absolute inset-0 flex items-center justify-center">
+                <motion.div
+                  style={{ rotate, y: y2 }}
+                  className="relative w-72 h-96"
+                >
+                  <div className="absolute inset-0 rounded-2xl bg-[#0A0A0A] shadow-2xl" />
+                  <div className="absolute -top-6 -right-8 w-56 h-72 rounded-2xl bg-[#FF4A1C] shadow-xl" />
+                  <div className="absolute -bottom-8 -left-10 w-52 h-64 rounded-2xl bg-[#F1EFE8] shadow-xl overflow-hidden">
+                    <div className="absolute inset-0 flex items-center justify-center font-display text-5xl text-[#0A0A0A]">
+                      a.
+                    </div>
+                  </div>
+                </motion.div>
+              </div>
+            </div>
+            <div className="absolute -bottom-6 -left-6 w-32 h-32 rounded-full bg-[#1F3D2B] text-[#FAFAF7] flex items-center justify-center text-center font-display text-xs leading-tight p-3 shadow-xl">
+              curated<br />weekly
+            </div>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Marquee() {
+  return (
+    <section className="border-y border-[#0A0A0A] bg-[#0A0A0A] text-[#FAFAF7] overflow-hidden">
+      <div className="flex animate-marquee whitespace-nowrap py-5">
+        {[...CATEGORIES, ...CATEGORIES].map((c, i) => (
+          <div key={i} className="flex items-center gap-6 px-6">
+            <span className="font-display text-2xl tracking-tight">{c}</span>
+            <span className="text-[#FF4A1C] text-2xl">✦</span>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function Stats() {
+  return (
+    <section className="py-20 sm:py-28 bg-[#FAFAF7]">
+      <div className="max-w-7xl mx-auto px-6 lg:px-10">
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+          className="grid grid-cols-2 lg:grid-cols-4 border-y border-[#0A0A0A]"
+        >
+          {STATS.map((s, i) => (
+            <div
+              key={s.label}
+              className={`p-8 sm:p-10 ${
+                i < STATS.length - 1 ? "border-b lg:border-b-0 lg:border-r border-[#E5E5E0]" : ""
+              } ${i % 2 === 0 ? "border-r lg:border-r" : ""}`}
+            >
+              <p className="font-mono text-[10px] tracking-[0.2em] uppercase text-[#6B6B6B]">
+                0{i + 1}
+              </p>
+              <div className="mt-5 flex items-baseline gap-1">
+                <span className="font-display text-5xl sm:text-6xl tracking-tight text-[#0A0A0A]">
+                  <CountUp end={s.value} duration={2.4} enableScrollSpy scrollSpyOnce />
+                </span>
+                <span className="font-display text-2xl text-[#FF4A1C]">{s.suffix}</span>
+              </div>
+              <p className="mt-2 text-[13px] text-[#6B6B6B]">{s.label}</p>
+            </div>
+          ))}
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+
+function FeaturedApps({ apps }) {
+  const featured = apps?.slice(0, 6) || [];
+  return (
+    <section className="py-24 sm:py-32 bg-[#FAFAF7]">
+      <div className="max-w-7xl mx-auto px-6 lg:px-10">
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-14">
+          <div>
+            <Eyebrow>— 01 / Featured this week</Eyebrow>
+            <h2 className="mt-4 font-display text-4xl sm:text-5xl lg:text-6xl leading-[1.02] tracking-tight max-w-xl">
+              Six apps <span className="italic text-[#FF4A1C]">on rotation</span> right now.
+            </h2>
+          </div>
+          <Link
+            to="/apps"
+            className="group inline-flex items-center gap-2 text-[13px] font-mono tracking-widest uppercase text-[#0A0A0A]"
+          >
+            See full library
+            <FiArrowUpRight
+              size={14}
+              className="transition-transform duration-300 group-hover:rotate-45"
+            />
+          </Link>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-12">
+          {featured.map((app, i) => (
+            <AppCard key={app.id} app={app} index={i} />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function CategoryGrid() {
+  return (
+    <section className="py-24 sm:py-32 bg-[#0A0A0A] text-[#FAFAF7] noise">
+      <div className="relative max-w-7xl mx-auto px-6 lg:px-10">
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-14">
+          <div>
+            <p className="font-mono text-[11px] tracking-[0.2em] uppercase text-white/50">
+              — 03 / The index
+            </p>
+            <h2 className="mt-4 font-display text-4xl sm:text-5xl lg:text-6xl leading-[1.02] tracking-tight max-w-2xl">
+              Browse by <span className="italic text-[#FF4A1C]">category</span>.
+            </h2>
+          </div>
+          <Link
+            to="/apps"
+            className="text-[13px] font-mono tracking-widest uppercase text-white/70 hover:text-white"
+          >
+            All categories →
+          </Link>
+        </div>
+
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 border-t border-l border-white/10">
+          {CATEGORIES.slice(0, 10).map((c, i) => (
+            <Link
+              key={c}
+              to={`/apps?category=${c.toLowerCase()}`}
+              className="group relative aspect-square border-b border-r border-white/10 p-6 flex flex-col justify-between hover:bg-white hover:text-[#0A0A0A] transition-colors duration-500"
+            >
+              <span className="font-mono text-[10px] tracking-widest text-white/40 group-hover:text-[#0A0A0A]/40">
+                0{i + 1}
+              </span>
+              <div>
+                <p className="font-display text-2xl tracking-tight">{c}</p>
+                <FiArrowUpRight
+                  size={16}
+                  className="mt-2 -rotate-12 group-hover:rotate-0 transition-transform duration-500"
+                />
+              </div>
+            </Link>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Testimonials() {
+  return (
+    <section className="py-24 sm:py-32 bg-[#FAFAF7]">
+      <div className="max-w-7xl mx-auto px-6 lg:px-10">
+        <div className="grid lg:grid-cols-12 gap-10 mb-14">
+          <div className="lg:col-span-5">
+            <Eyebrow>— 04 / Field notes</Eyebrow>
+            <h2 className="mt-4 font-display text-4xl sm:text-5xl lg:text-6xl leading-[1.02] tracking-tight">
+              Read by
+              <br />
+              <span className="italic text-[#FF4A1C]">the curious.</span>
+            </h2>
+          </div>
+          <div className="lg:col-span-6 lg:col-start-7 self-end">
+            <p className="text-[15px] leading-relaxed text-[#6B6B6B] max-w-md">
+              Writers, engineers, designers and one very opinionated cat. AppTrail is built around
+              the people who write for it — and the people who read it on the train.
+            </p>
+          </div>
+        </div>
+
+        <motion.div
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: "-80px" }}
+          variants={{ show: { transition: { staggerChildren: 0.12 } } }}
+          className="grid grid-cols-1 md:grid-cols-3 gap-6"
+        >
+          {TESTIMONIALS.map((t) => (
+            <motion.figure
+              key={t.name}
+              variants={item}
+              className="relative bg-white border border-[#E5E5E0] p-8 sm:p-10 flex flex-col gap-6 hover:border-[#0A0A0A] transition-colors"
+            >
+              <span className="font-display text-6xl leading-none text-[#FF4A1C] absolute top-4 right-6">
+                &ldquo;
+              </span>
+              <blockquote className="font-display text-[19px] leading-[1.45] tracking-tight text-[#0A0A0A]">
+                {t.quote}
+              </blockquote>
+              <div className="mt-auto flex items-center gap-3">
+                <img
+                  src={t.avatar}
+                  alt={t.name}
+                  className="w-10 h-10 rounded-full object-cover"
+                />
+                <div>
+                  <p className="text-[13px] font-medium text-[#0A0A0A]">{t.name}</p>
+                  <p className="text-[11px] font-mono text-[#6B6B6B] tracking-wider">
+                    {t.role}
+                  </p>
+                </div>
+              </div>
+            </motion.figure>
+          ))}
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+
+function FinalCTA() {
+  return (
+    <section className="relative py-28 sm:py-40 bg-[#FAFAF7] overflow-hidden">
+      <div className="absolute top-0 left-0 right-0 h-px bg-[#0A0A0A]" />
+      <div className="max-w-5xl mx-auto px-6 lg:px-10 text-center">
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <Eyebrow>— Closing</Eyebrow>
+          <h2 className="mt-5 font-display text-[clamp(2.5rem,8vw,6rem)] leading-[0.95] tracking-[-0.02em]">
+            Open the
+            <br />
+            <span className="italic text-[#FF4A1C]">next issue.</span>
+          </h2>
+          <p className="mt-7 text-[16px] text-[#6B6B6B] max-w-md mx-auto">
+            Get the weekly dispatch in your inbox. One note, every Friday. No tracking, no
+            upsells.
+          </p>
+          <div className="mt-10 flex flex-col sm:flex-row gap-3 justify-center">
+            <PrimaryButton text="Subscribe free" to="/register" />
+            <PrimaryButton text="Browse library" to="/apps" variant="ghost" />
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+
+export default function Home() {
+  const appsData = useLoaderData() || [];
+
+  return (
+    <div className="bg-[#FAFAF7]">
+      <Hero />
+      <Marquee />
+      <Stats />
+      <FeaturedApps apps={appsData} />
+      <Features />
+      <CategoryGrid />
+      <Testimonials />
+      <FinalCTA />
+    </div>
+  );
+}

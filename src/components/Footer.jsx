@@ -1,233 +1,193 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router';
-import { FiTwitter, FiInstagram, FiFacebook } from 'react-icons/fi';
+import { useState } from "react";
+import { Link } from "react-router";
+import { motion } from "framer-motion";
+import { FiTwitter, FiInstagram, FiFacebook, FiArrowUpRight, FiCheck } from "react-icons/fi";
 
-const Footer = () => {
-  const [email, setEmail] = useState('');
-  const [submitted, setSubmitted] = useState(false);
-  const [error, setError] = useState('');
+const FOOTER_GROUPS = [
+  {
+    label: "Product",
+    items: [
+      { to: "/apps", label: "Browse apps" },
+      { to: "/featured", label: "Featured" },
+      { to: "/reviews", label: "Reviews" },
+      { to: "/apps?sort=new", label: "New releases" },
+    ],
+  },
+  {
+    label: "Company",
+    items: [
+      { to: "/about", label: "About" },
+      { to: "/careers", label: "Careers" },
+      { to: "/press", label: "Press" },
+      { to: "/contact", label: "Contact" },
+    ],
+  },
+  {
+    label: "Resources",
+    items: [
+      { to: "/blog", label: "Journal" },
+      { to: "/guides", label: "Guides" },
+      { to: "/changelog", label: "Changelog" },
+      { to: "/api", label: "Developers" },
+    ],
+  },
+  {
+    label: "Legal",
+    items: [
+      { to: "/terms", label: "Terms" },
+      { to: "/privacy", label: "Privacy" },
+      { to: "/cookies", label: "Cookies" },
+      { to: "/licenses", label: "Licenses" },
+    ],
+  },
+];
 
-  const handleNewsletter = (e) => {
+function Newsletter() {
+  const [email, setEmail] = useState("");
+  const [status, setStatus] = useState("idle"); // idle | error | success
+
+  const submit = (e) => {
     e.preventDefault();
-    // Simple email validation
-    if (!email.match(/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/)) {
-      setError('Please enter a valid email address.');
-      setSubmitted(false);
+    if (!/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)) {
+      setStatus("error");
       return;
     }
-    setError('');
-    setSubmitted(true);
-    setEmail('');
-    // Here you would integrate with your newsletter backend
+    setStatus("success");
+    setEmail("");
+    setTimeout(() => setStatus("idle"), 4000);
   };
 
   return (
-    <footer className="relative bg-gradient-to-br from-slate-900 to-slate-800 text-slate-100 pt-16 pb-8 shadow-2xl mt-20">
-      {/* Top SVG wave */}
-      <svg
-        className="absolute top-0 w-full h-8 -mt-6 text-slate-900"
-        preserveAspectRatio="none"
-        viewBox="0 0 1440 54"
-      >
-        <path
-          fill="currentColor"
-          d="M0 22L120 16.7C240 11 480 1.00001 720 0.700012C960 1.00001 1200 11 1320 16.7L1440 22V54H1320C1200 54 960 54 720 54C480 54 240 54 120 54H0V22Z"
+    <form onSubmit={submit} className="mt-5 max-w-md" noValidate>
+      <div className="flex items-stretch border border-[#0A0A0A] rounded-full p-1 bg-white">
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => {
+            setEmail(e.target.value);
+            if (status !== "idle") setStatus("idle");
+          }}
+          placeholder="you@studio.com"
+          aria-label="Email address"
+          className="flex-1 bg-transparent px-4 py-2.5 text-[14px] text-[#0A0A0A] placeholder:text-[#9A9A95] outline-none"
         />
-      </svg>
-      <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-10 pb-12 border-b border-slate-700">
-          {/* Brand & Newsletter */}
-          <div className="md:col-span-2 flex flex-col gap-8">
-            <div>
-              <Link to="/" aria-label="Go home" title="AppTrail" className="inline-flex items-center gap-2">
-                <img src="/app-trail-logo.png" alt="AppTrail Logo" className="w-12 h-12 rounded-xl shadow-lg" />
-                <span className="text-2xl font-extrabold tracking-tight text-emerald-400">AppTrail</span>
-              </Link>
-              <p className="mt-4 text-base text-slate-300 leading-relaxed">
-                Discover, install, and review the best apps tailored to your interests. Your one-stop destination for all your app needs.
-              </p>
-            </div>
-            {/* Newsletter Signup */}
-            <form
-              className="mt-2 flex flex-col sm:flex-row items-start sm:items-end gap-3"
-              onSubmit={handleNewsletter}
-              autoComplete="off"
-            >
-              <label htmlFor="newsletter" className="text-sm font-semibold text-slate-200">
-                Subscribe to our newsletter
-              </label>
-              <div className="flex gap-2 w-full">
-                <input
-                  id="newsletter"
-                  type="email"
-                  value={email}
-                  onChange={e => setEmail(e.target.value)}
-                  placeholder="Your email"
-                  className="flex-1 px-4 py-2 rounded-xl bg-slate-800 text-slate-100 border border-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-400 transition-all duration-200 placeholder:text-slate-400"
-                  required
-                  aria-label="Email address"
-                />
-                <button
-                  type="submit"
-                  className="px-5 py-2 rounded-xl bg-gradient-to-r from-emerald-500 to-sky-400 hover:from-emerald-600 hover:to-sky-500 text-white font-semibold shadow-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-emerald-400"
-                >
-                  Subscribe
-                </button>
-              </div>
-              {error && <span className="text-rose-400 text-xs mt-1">{error}</span>}
-              {submitted && !error && (
-                <span className="text-emerald-400 text-xs mt-1 animate-fade-in">Thank you for subscribing!</span>
-              )}
-            </form>
+        <button
+          type="submit"
+          className="inline-flex items-center gap-1.5 px-4 h-10 rounded-full bg-[#0A0A0A] text-white text-[13px] font-medium hover:bg-[#FF4A1C] transition-colors"
+        >
+          Subscribe
+          <FiArrowUpRight size={14} />
+        </button>
+      </div>
+      <div className="min-h-[20px] mt-2 text-[12px] font-mono">
+        {status === "error" && <span className="text-[#FF4A1C]">Please enter a valid email.</span>}
+        {status === "success" && (
+          <motion.span
+            initial={{ opacity: 0, y: 4 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="inline-flex items-center gap-1 text-[#1F3D2B]"
+          >
+            <FiCheck size={12} /> Subscribed — see you in your inbox.
+          </motion.span>
+        )}
+      </div>
+    </form>
+  );
+}
+
+export default function Footer() {
+  return (
+    <footer className="relative bg-[#0A0A0A] text-[#FAFAF7] overflow-hidden">
+      <div className="absolute inset-0 noise pointer-events-none" />
+      <div className="relative max-w-7xl mx-auto px-6 lg:px-10 pt-20 pb-10">
+        {/* Top editorial row */}
+        <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-10 pb-14 border-b border-white/10">
+          <div className="max-w-xl">
+            <p className="eyebrow text-white/50">— The dispatch</p>
+            <h2 className="mt-4 font-display text-4xl sm:text-5xl leading-[1.05] tracking-tight">
+              A weekly note on the
+              <br />
+              <span className="italic text-[#FF4A1C]">apps worth your time.</span>
+            </h2>
+            <Newsletter />
           </div>
-          {/* Navigation Links */}
-          <div className="md:col-span-3 grid grid-cols-2 sm:grid-cols-4 gap-6">
-            <div>
-              <p className="font-bold tracking-wide text-sky-300 mb-3 uppercase text-sm">Services</p>
-              <ul className="space-y-2">
-                <li>
-                  <Link to="/services/branding" className="footer-link">Branding</Link>
-                </li>
-                <li>
-                  <Link to="/services/design" className="footer-link">Design</Link>
-                </li>
-                <li>
-                  <Link to="/services/marketing" className="footer-link">Marketing</Link>
-                </li>
-                <li>
-                  <Link to="/services/advertisement" className="footer-link">Advertisement</Link>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <p className="font-bold tracking-wide text-sky-300 mb-3 uppercase text-sm">Company</p>
-              <ul className="space-y-2">
-                <li>
-                  <Link to="/about" className="footer-link">About us</Link>
-                </li>
-                <li>
-                  <Link to="/contact" className="footer-link">Contact</Link>
-                </li>
-                <li>
-                  <Link to="/careers" className="footer-link">Jobs</Link>
-                </li>
-                <li>
-                  <Link to="/press" className="footer-link">Press kit</Link>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <p className="font-bold tracking-wide text-sky-300 mb-3 uppercase text-sm">Categories</p>
-              <ul className="space-y-2">
-                <li>
-                  <Link to="/apps/education" className="footer-link">Education</Link>
-                </li>
-                <li>
-                  <Link to="/apps/productivity" className="footer-link">Productivity</Link>
-                </li>
-                <li>
-                  <Link to="/apps/gaming" className="footer-link">Gaming</Link>
-                </li>
-                <li>
-                  <Link to="/apps/utilities" className="footer-link">Utilities</Link>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <p className="font-bold tracking-wide text-sky-300 mb-3 uppercase text-sm">Legal</p>
-              <ul className="space-y-2">
-                <li>
-                  <Link to="/terms" className="footer-link">Terms of use</Link>
-                </li>
-                <li>
-                  <Link to="/privacy" className="footer-link">Privacy policy</Link>
-                </li>
-                <li>
-                  <Link to="/cookies" className="footer-link">Cookie policy</Link>
-                </li>
-              </ul>
+          <div className="flex flex-col gap-3">
+            <p className="eyebrow text-white/50">Follow</p>
+            <div className="flex gap-2">
+              {[
+                { Comp: FiTwitter, label: "Twitter", href: "https://twitter.com" },
+                { Comp: FiInstagram, label: "Instagram", href: "https://instagram.com" },
+                { Comp: FiFacebook, label: "Facebook", href: "https://facebook.com" },
+              ].map((entry) => {
+                const Comp = entry.Comp;
+                return (
+                  <a
+                    key={entry.label}
+                    href={entry.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={entry.label}
+                    className="w-11 h-11 inline-flex items-center justify-center rounded-full border border-white/15 text-white/80 hover:text-[#0A0A0A] hover:bg-[#FAFAF7] hover:border-[#FAFAF7] transition-all duration-300"
+                  >
+                    <Comp size={16} />
+                  </a>
+                );
+              })}
             </div>
           </div>
         </div>
-        {/* Bottom Section */}
-        <div className="flex flex-col md:flex-row justify-between items-center pt-8">
-          <p className="text-sm text-slate-400 mb-4 md:mb-0">
-            © {new Date().getFullYear()} AppTrail Industries Ltd. All rights reserved.
+
+        {/* Link columns */}
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-10 py-14">
+          <div className="col-span-2 md:col-span-1">
+            <Link to="/" className="inline-flex items-center gap-2.5">
+              <span className="relative w-8 h-8 rounded-lg bg-[#FAFAF7] flex items-center justify-center">
+                <span className="absolute inset-[3px] rounded-md bg-[#FF4A1C]" />
+                <span className="relative font-display text-[#0A0A0A] text-[15px] font-semibold leading-none">
+                  a
+                </span>
+              </span>
+              <span className="font-display text-[22px] font-semibold tracking-tight">
+                AppTrail
+              </span>
+            </Link>
+            <p className="mt-4 text-[13px] leading-relaxed text-white/60 max-w-[220px]">
+              A curated journal of apps. Built for the curious, written by people who use them.
+            </p>
+          </div>
+          {FOOTER_GROUPS.map((g) => (
+            <div key={g.label}>
+              <p className="eyebrow text-white/50">{g.label}</p>
+              <ul className="mt-4 space-y-2.5">
+                {g.items.map((it) => (
+                  <li key={it.label}>
+                    <Link
+                      to={it.to}
+                      className="text-[13px] text-white/80 hover:text-white link-underline"
+                    >
+                      {it.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+
+        {/* Bottom bar */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pt-8 border-t border-white/10">
+          <p className="text-[12px] font-mono text-white/50">
+            © {new Date().getFullYear()} AppTrail Industries — Issue No. 01
           </p>
-          <div className="flex items-center space-x-5">
-            <a
-              href="https://twitter.com"
-              className="footer-social"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Twitter"
-            >
-              <FiTwitter size={22} />
-            </a>
-            <a
-              href="https://instagram.com"
-              className="footer-social"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Instagram"
-            >
-              <FiInstagram size={22} />
-            </a>
-            <a
-              href="https://facebook.com"
-              className="footer-social"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Facebook"
-            >
-              <FiFacebook size={22} />
-            </a>
+          <div className="flex items-center gap-5 text-[12px] font-mono text-white/50">
+            <span className="inline-flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#FF4A1C] animate-pulse" />
+              All systems normal
+            </span>
+            <span>Built with care</span>
           </div>
         </div>
       </div>
-      {/* Footer link and social icon styles */}
-      <style>{`
-        .footer-link {
-          color: #e2e8f0;
-          transition: color 0.2s, transform 0.2s;
-          text-decoration: none;
-          font-weight: 500;
-          border-radius: 0.5rem;
-          padding: 0.25rem 0.5rem;
-          display: inline-block;
-        }
-        .footer-link:hover, .footer-link:focus {
-          color: #38bdf8;
-          background: rgba(56,189,248,0.08);
-          transform: scale(1.06);
-          outline: none;
-        }
-        .footer-social {
-          color: #e2e8f0;
-          transition: color 0.2s, transform 0.2s, box-shadow 0.2s;
-          border-radius: 9999px;
-          padding: 0.5rem;
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-        }
-        .footer-social:hover, .footer-social:focus {
-          color: #10b981;
-          background: rgba(16,185,129,0.08);
-          transform: scale(1.15);
-          box-shadow: 0 2px 12px 0 rgba(16,185,129,0.15);
-          outline: none;
-        }
-        .animate-fade-in {
-          animation: fadeIn 0.6s ease;
-        }
-        @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(8px);}
-          to { opacity: 1; transform: translateY(0);}
-        }
-      `}</style>
     </footer>
   );
-};
-
-export default Footer;
+}

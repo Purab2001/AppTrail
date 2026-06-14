@@ -1,59 +1,68 @@
-import React from 'react';
-import { Link } from 'react-router';
-import { FaStar, FaDownload } from 'react-icons/fa';
+import { Link } from "react-router";
+import { motion } from "framer-motion";
+import { FiArrowUpRight, FiDownload } from "react-icons/fi";
+import { StarRating } from "./Rating";
+import { formatNumber } from "../utils/format";
 
-const AppCard = ({ app }) => {
+export default function AppCard({ app, index = 0, variant = "default" }) {
+  const compact = variant === "compact";
+
   return (
-    <div
-      className="flex flex-col bg-slate-900 border border-slate-800 rounded-2xl shadow-xl overflow-hidden hover:shadow-emerald-500/20 hover:scale-105 transition-all duration-300 focus-within:ring-2 focus-within:ring-emerald-400"
-      tabIndex={0}
-      aria-label={`View details for ${app.name}`}
+    <motion.div
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-60px" }}
+      transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: index * 0.06 }}
+      className="group"
     >
-      <Link to={`/apps/${app.id}`} tabIndex={-1} aria-label={app.name}>
-        <img
-          className="w-full h-48 object-cover rounded-t-2xl transition-transform duration-300 group-hover:scale-105"
-          src={app.thumbnail}
-          alt={app.name}
-          onError={(e) => {
-            e.target.onerror = null;
-            e.target.src = 'https://via.placeholder.com/400x200?text=Image+Not+Found';
-          }}
-        />
-      </Link>
-      <div className="flex-1 flex flex-col p-6 gap-3">
-        <Link to={`/apps/${app.id}`}>
-          <h3 className="mb-1 text-xl font-bold font-inter text-slate-100 truncate hover:text-emerald-400 transition-colors duration-200">
-            {app.name}
-          </h3>
-        </Link>
-        <div className="flex items-center gap-3 mb-2">
-          <span className="inline-flex items-center gap-1 text-amber-400 font-semibold">
-            <FaStar aria-label="Rating" /> {app.rating}
-          </span>
-          <span className="text-slate-500">•</span>
-          <span className="inline-flex items-center gap-1 text-sky-400 font-semibold">
-            <FaDownload aria-label="Downloads" /> {app.downloads.toLocaleString()}
-          </span>
+      <Link to={`/apps/${app.id}`} className="block">
+        <div className="relative overflow-hidden rounded-2xl bg-[#F1EFE8] aspect-[4/3]">
+          {app.thumbnail || app.banner ? (
+            <img
+              src={app.thumbnail || app.banner}
+              alt={app.name}
+              className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+              loading="lazy"
+            />
+          ) : (
+            <div className="w-full h-full bg-[#F1EFE8] flex items-center justify-center text-[#0A0A0A] font-display text-4xl">
+              {app.name?.[0]}
+            </div>
+          )}
+          <div className="absolute top-3 left-3 inline-flex items-center px-2.5 py-1 rounded-full bg-white/95 backdrop-blur-sm text-[10px] font-mono tracking-widest uppercase text-[#0A0A0A]">
+            {app.category || "App"}
+          </div>
+          <div className="absolute inset-0 bg-[#0A0A0A]/0 group-hover:bg-[#0A0A0A]/15 transition-colors duration-500" />
+          <div className="absolute bottom-3 right-3 w-9 h-9 rounded-full bg-[#0A0A0A] text-white flex items-center justify-center opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-500">
+            <FiArrowUpRight size={16} />
+          </div>
         </div>
-        <p className="text-slate-400 text-sm mb-4 line-clamp-3">{app.description}</p>
-        <div className="flex justify-between items-center mt-auto">
-          <span className="bg-emerald-500/10 text-emerald-400 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">
-            {app.category || 'App'}
-          </span>
-          <Link
-            to={`/apps/${app.id}`}
-            className="inline-flex items-center px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-emerald-500 to-sky-400 rounded-xl shadow hover:from-emerald-600 hover:to-sky-500 focus:outline-none focus:ring-2 focus:ring-emerald-400 transition-all duration-200"
-            aria-label={`View details for ${app.name}`}
-          >
-            View Details
-            <svg className="w-4 h-4 ml-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
-              <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M1 5h12m0 0L9 1m4 4L9 9" />
-            </svg>
-          </Link>
-        </div>
-      </div>
-    </div>
-  );
-};
 
-export default AppCard;
+        <div className="pt-5 flex items-start justify-between gap-3">
+          <div className="min-w-0 flex-1">
+            <h3 className="font-display text-xl tracking-tight text-[#0A0A0A] truncate">
+              {app.name}
+            </h3>
+            <p className="mt-1 text-[12px] font-mono text-[#6B6B6B] tracking-wider truncate">
+              {app.developer}
+            </p>
+            {!compact && app.tagline && (
+              <p className="mt-2 text-[13px] text-[#6B6B6B] line-clamp-1">{app.tagline}</p>
+            )}
+          </div>
+          <StarRating value={app.rating} />
+        </div>
+
+        {!compact && (
+          <div className="mt-3 flex items-center gap-4 text-[11px] font-mono text-[#6B6B6B] tracking-wider">
+            <span className="inline-flex items-center gap-1.5">
+              <FiDownload size={11} /> {formatNumber(app.downloads)}
+            </span>
+            <span className="text-[#E5E5E0]">·</span>
+            <span className="uppercase tracking-widest">{app.price || "Free"}</span>
+          </div>
+        )}
+      </Link>
+    </motion.div>
+  );
+}

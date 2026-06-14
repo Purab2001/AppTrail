@@ -1,253 +1,332 @@
-// Navbar with dark color scheme and profile dropdown positioned lower
-import { NavLink, useNavigate } from 'react-router';
-import { useAuth } from '../contexts/AuthContext';
-import { FiLogOut, FiUser, FiSearch, FiMenu, FiX, FiChevronDown } from 'react-icons/fi';
-import { useState, useRef } from 'react';
+import { useEffect, useState } from "react";
+import { NavLink, useNavigate } from "react-router";
+import { useAuth } from "../contexts/AuthContext";
+import {
+  FiSearch,
+  FiMenu,
+  FiX,
+  FiUser,
+  FiLogOut,
+  FiCommand,
+} from "react-icons/fi";
+import { AnimatePresence, motion } from "framer-motion";
+import SearchPalette from "./SearchPalette";
 
 const NAV_LINKS = [
-  { to: '/', label: 'Home' },
-  { to: '/apps', label: 'Categories' },
-  { to: '/featured', label: 'Featured' },
-  { to: '/reviews', label: 'Reviews' },
+  { to: "/", label: "Home" },
+  { to: "/apps", label: "Categories" },
+  { to: "/featured", label: "Featured" },
+  { to: "/reviews", label: "Reviews" },
 ];
 
-const Navbar = () => {
-  const { user, logOut } = useAuth();
-  const [imgError, setImgError] = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const navigate = useNavigate();
-  const dropdownRef = useRef(null);
+function Wordmark() {
+  return (
+    <NavLink to="/" className="group flex items-center gap-2.5">
+      <span className="relative w-8 h-8 rounded-lg bg-[#0A0A0A] flex items-center justify-center overflow-hidden">
+        <span className="absolute inset-[3px] rounded-md bg-[#FF4A1C] origin-bottom-left transition-transform duration-500 group-hover:rotate-12" />
+        <span className="relative font-display text-white text-[15px] font-semibold leading-none">
+          a
+        </span>
+      </span>
+      <span className="font-display text-[22px] font-semibold tracking-tight text-[#0A0A0A]">
+        AppTrail
+      </span>
+    </NavLink>
+  );
+}
 
-  const handleLogout = async () => {
-    try {
-      await logOut();
-      navigate('/');
-    } catch (error) {
-      console.error('Logout error:', error);
-    }
-  };
-
-  // Close dropdown on outside click
-  const handleDropdownBlur = (e) => {
-    if (!dropdownRef.current?.contains(e.relatedTarget)) {
-      setDropdownOpen(false);
-    }
-  };
-
-  const NavItem = ({ to, label, onClick }) => (
+function NavItem({ to, label, onClick }) {
+  return (
     <NavLink
       to={to}
       onClick={onClick}
       className={({ isActive }) =>
-        `relative px-5 py-2.5 mx-1 rounded-2xl font-semibold text-base tracking-wide transition-all duration-300 ease-out transform
-        ${isActive 
-          ? 'text-white bg-gradient-to-r from-indigo-700 to-slate-800 shadow-lg shadow-indigo-900 scale-105'
-          : 'text-slate-200 hover:text-emerald-400 hover:bg-slate-800 hover:shadow-md hover:scale-105 active:scale-95'
+        `relative px-3.5 py-2 text-[14px] font-medium tracking-tight transition-colors duration-300 ${
+          isActive ? "text-[#0A0A0A]" : "text-[#6B6B6B] hover:text-[#0A0A0A]"
         }`
       }
-      style={{ letterSpacing: '0.02em' }}
     >
-      <span className="relative z-10">{label}</span>
+      {({ isActive }) => (
+        <span className="relative inline-flex flex-col items-center">
+          <span>{label}</span>
+          <motion.span
+            initial={false}
+            animate={{ scaleX: isActive ? 1 : 0 }}
+            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            className="absolute -bottom-1 left-0 right-0 h-px bg-[#FF4A1C] origin-left"
+          />
+        </span>
+      )}
     </NavLink>
   );
+}
+
+export default function Navbar() {
+  const { user, logOut } = useAuth();
+  const [imgError, setImgError] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
+    const onKey = (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        setSearchOpen(true);
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
+  useEffect(() => {
+    if (mobileOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => (document.body.style.overflow = "");
+  }, [mobileOpen]);
+
+  const handleLogout = async () => {
+    try {
+      await logOut();
+      setProfileOpen(false);
+      navigate("/");
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   return (
-    <nav className="w-full fixed z-30 bg-gradient-to-br from-slate-900 to-slate-800 text-slate-100 shadow-2xl border-b border-slate-800">
-      <div className="max-w-7xl mx-auto flex items-center justify-between px-4 py-3 md:py-4">
-        {/* Left: Logo/Brand */}
-        <div className="flex items-center gap-4">
-          <button
-            className="lg:hidden p-2 rounded-xl hover:bg-slate-800 transition-colors duration-200"
-            aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
-            onClick={() => setMobileOpen((open) => !open)}
+    <>
+      <motion.header
+        initial={{ y: -32, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+        className="fixed top-0 left-0 right-0 z-50"
+      >
+        <div
+          className={`mx-auto transition-all duration-500 ${
+            scrolled
+              ? "max-w-6xl mt-3 sm:mt-4 px-3"
+              : "max-w-7xl mt-0 sm:mt-0 px-0"
+          }`}
+        >
+          <div
+            className={`flex items-center justify-between gap-3 px-4 sm:px-5 transition-all duration-500 ${
+              scrolled
+                ? "h-14 rounded-2xl bg-white/75 backdrop-blur-xl border border-[#E5E5E0] shadow-[0_2px_24px_-12px_rgba(10,10,10,0.18)]"
+                : "h-16 sm:h-[72px] bg-[#FAFAF7] border-b border-transparent"
+            }`}
           >
-            {mobileOpen ? <FiX size={26} /> : <FiMenu size={26} />}
-          </button>
-          <NavLink to="/" className="flex items-center gap-2" onClick={() => setMobileOpen(false)}>
-            <img src="/app-trail-logo.png" alt="AppTrail Logo" className="w-9 h-9 rounded-xl shadow-md" />
-            <span className="text-2xl md:text-2xl font-extrabold tracking-tight text-emerald-400 select-none">AppTrail</span>
-          </NavLink>
-        </div>
-
-        {/* Center: Desktop Nav */}
-        <div className="hidden lg:flex gap-3 ml-10">
-          {NAV_LINKS.map((link) => (
-            <NavItem key={link.to} to={link.to} label={link.label} />
-          ))}
-        </div>
-
-        {/* Right: Actions */}
-        <div className="flex items-center gap-3">
-          <button
-            className="p-2 rounded-xl hover:bg-slate-800 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-emerald-400"
-            aria-label="Search"
-            tabIndex={0}
-          >
-            <FiSearch size={22} className="text-slate-200" />
-          </button>
-          {!user && (
-            <button
-              onClick={() => navigate('/login')}
-              className="px-5 py-2 rounded-2xl bg-gradient-to-r from-emerald-500 to-sky-400 hover:from-emerald-600 hover:to-sky-500 text-white font-semibold shadow-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-emerald-400"
-            >
-              Get Started
-            </button>
-          )}
-          {user && (
-            <div className="flex items-center gap-3 relative" ref={dropdownRef}>
+            <div className="flex items-center gap-6">
               <button
-                className="relative group focus:outline-none"
-                aria-haspopup="true"
-                aria-expanded={dropdownOpen}
-                onClick={() => setDropdownOpen((open) => !open)}
-                onBlur={handleDropdownBlur}
-                tabIndex={0}
+                className="lg:hidden p-2 -ml-1 rounded-lg hover:bg-[#F1EFE8] transition-colors"
+                aria-label={mobileOpen ? "Close menu" : "Open menu"}
+                onClick={() => setMobileOpen((v) => !v)}
               >
-                {!imgError && user.photoURL ? (
-                  <img
-                    src={user.photoURL}
-                    alt="Profile"
-                    className="w-10 h-10 rounded-full object-cover border-2 border-slate-700 shadow"
-                    onError={() => setImgError(true)}
-                    referrerPolicy="no-referrer"
-                  />
-                ) : (
-                  <div className="w-10 h-10 rounded-full bg-indigo-700 flex items-center justify-center text-white font-bold text-lg shadow">
-                    {user.displayName ? user.displayName[0].toUpperCase() : <FiUser size={22} />}
-                  </div>
-                )}
-                <FiChevronDown className="absolute -right-2 -bottom-2 text-slate-400 group-hover:text-emerald-400 transition" size={18} />
+                {mobileOpen ? <FiX size={20} /> : <FiMenu size={20} />}
               </button>
-              {/* Dropdown Menu */}
-              {dropdownOpen && (
-                <div
-                  className="absolute right-0 mt-44 w-44 bg-slate-900 border border-slate-800 rounded-xl shadow-lg py-2 z-50 animate-fade-in"
-                  tabIndex={-1}
-                  onMouseDown={e => e.preventDefault()}
+              <Wordmark />
+            </div>
+
+            <nav className="hidden lg:flex items-center gap-1">
+              {NAV_LINKS.map((l) => (
+                <NavItem key={l.to} to={l.to} label={l.label} />
+              ))}
+            </nav>
+
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setSearchOpen(true)}
+                className="hidden sm:inline-flex items-center gap-2 h-9 pl-3 pr-2 rounded-full border border-[#E5E5E0] bg-white/60 hover:bg-white hover:border-[#0A0A0A]/20 text-[#6B6B6B] hover:text-[#0A0A0A] transition-all duration-300"
+                aria-label="Search"
+              >
+                <FiSearch size={14} />
+                <span className="text-[12px] font-medium">Search</span>
+                <span className="inline-flex items-center gap-0.5 ml-1 px-1.5 h-5 rounded border border-[#E5E5E0] bg-[#FAFAF7] font-mono text-[10px] text-[#6B6B6B]">
+                  <FiCommand size={9} />K
+                </span>
+              </button>
+              <button
+                onClick={() => setSearchOpen(true)}
+                className="sm:hidden p-2 rounded-lg hover:bg-[#F1EFE8]"
+                aria-label="Search"
+              >
+                <FiSearch size={18} />
+              </button>
+
+              {!user && (
+                <button
+                  onClick={() => navigate("/login")}
+                  className="hidden sm:inline-flex items-center h-9 px-4 rounded-full bg-[#0A0A0A] text-white text-[13px] font-medium hover:bg-[#1F3D2B] transition-colors duration-300"
                 >
+                  Get Started
+                </button>
+              )}
+
+              {user && (
+                <div className="relative">
                   <button
-                    className="w-full text-left px-4 py-2 text-slate-100 hover:bg-slate-800 hover:text-emerald-400 transition rounded-xl"
-                    onClick={() => {
-                      setDropdownOpen(false);
-                      navigate('/profile');
-                    }}
+                    onClick={() => setProfileOpen((v) => !v)}
+                    className="flex items-center gap-2 pl-1 pr-2 h-9 rounded-full border border-[#E5E5E0] bg-white hover:border-[#0A0A0A]/30 transition-all"
+                    aria-haspopup="true"
+                    aria-expanded={profileOpen}
                   >
-                    <FiUser className="inline mr-2" /> Profile
+                    {user.photoURL && !imgError ? (
+                      <img
+                        src={user.photoURL}
+                        alt=""
+                        referrerPolicy="no-referrer"
+                        onError={() => setImgError(true)}
+                        className="w-7 h-7 rounded-full object-cover"
+                      />
+                    ) : (
+                      <span className="w-7 h-7 rounded-full bg-[#1F3D2B] text-white flex items-center justify-center text-[12px] font-semibold">
+                        {user.displayName?.[0]?.toUpperCase() || <FiUser size={12} />}
+                      </span>
+                    )}
+                    <span className="hidden md:inline text-[12px] font-medium text-[#0A0A0A] max-w-[120px] truncate">
+                      {user.displayName?.split(" ")[0] || "Account"}
+                    </span>
                   </button>
-                  <button
-                    className="w-full text-left px-4 py-2 text-slate-100 hover:bg-slate-800 hover:text-emerald-400 transition rounded-xl"
-                    onClick={() => {
-                      setDropdownOpen(false);
-                      handleLogout();
-                    }}
-                  >
-                    <FiLogOut className="inline mr-2" /> Logout
-                  </button>
+                  <AnimatePresence>
+                    {profileOpen && (
+                      <>
+                        <button
+                          aria-label="Close menu"
+                          className="fixed inset-0 z-40 cursor-default"
+                          onClick={() => setProfileOpen(false)}
+                        />
+                        <motion.div
+                          initial={{ opacity: 0, y: 8, scale: 0.98 }}
+                          animate={{ opacity: 1, y: 0, scale: 1 }}
+                          exit={{ opacity: 0, y: 6, scale: 0.98 }}
+                          transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                          className="absolute right-0 mt-2 w-60 rounded-2xl bg-white border border-[#E5E5E0] shadow-2xl overflow-hidden z-50"
+                        >
+                          <div className="px-4 py-3 border-b border-[#E5E5E0]">
+                            <p className="text-[13px] font-medium text-[#0A0A0A] truncate">
+                              {user.displayName || "Welcome"}
+                            </p>
+                            <p className="text-[11px] text-[#6B6B6B] truncate">{user.email}</p>
+                          </div>
+                          <div className="p-1.5">
+                            <button
+                              onClick={() => {
+                                setProfileOpen(false);
+                                navigate("/profile");
+                              }}
+                              className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-[13px] text-[#0A0A0A] hover:bg-[#FAFAF7] transition-colors"
+                            >
+                              <FiUser size={14} /> Profile
+                            </button>
+                            <button
+                              onClick={handleLogout}
+                              className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-[13px] text-[#FF4A1C] hover:bg-[#FFF1EC] transition-colors"
+                            >
+                              <FiLogOut size={14} /> Sign out
+                            </button>
+                          </div>
+                        </motion.div>
+                      </>
+                    )}
+                  </AnimatePresence>
                 </div>
               )}
             </div>
-          )}
-        </div>
-      </div>
-
-      {/* Mobile Menu Drawer */}
-      <div
-        className={`fixed inset-0 z-40 transition-all duration-300 ease-in-out
-        ${mobileOpen ? 'visible opacity-100' : 'invisible opacity-0'}
-        `}
-        aria-hidden={!mobileOpen}
-      >
-        {/* Overlay */}
-        <div
-          className={`absolute inset-0 bg-black bg-opacity-40 transition-opacity duration-300 ${mobileOpen ? 'opacity-100' : 'opacity-0'}`}
-          onClick={() => setMobileOpen(false)}
-        />
-        {/* Drawer */}
-        <aside
-          className={`absolute top-0 right-0 h-full w-72 max-w-full bg-gradient-to-br from-slate-900 to-slate-800 text-slate-100 shadow-2xl border-l border-slate-800
-          transform transition-transform duration-300 ease-in-out
-          ${mobileOpen ? 'translate-x-0' : 'translate-x-full'}
-          flex flex-col rounded-l-3xl`}
-          role="menu"
-        >
-          <div className="flex items-center justify-between px-6 py-4 border-b border-slate-700">
-            <NavLink to="/" className="flex items-center gap-2" onClick={() => setMobileOpen(false)}>
-              <img src="/app-trail-logo.png" alt="AppTrail Logo" className="w-8 h-8 rounded-xl shadow" />
-              <span className="text-xl font-bold tracking-tight text-emerald-400">AppTrail</span>
-            </NavLink>
-            <button
-              className="p-2 rounded-xl hover:bg-slate-800 transition-colors duration-200"
-              aria-label="Close menu"
-              onClick={() => setMobileOpen(false)}
-            >
-              <FiX size={26} />
-            </button>
           </div>
-          <nav className="flex flex-col gap-2 px-6 py-4">
-            {NAV_LINKS.map((link) => (
-              <NavItem
-                key={link.to}
-                to={link.to}
-                label={link.label}
-                onClick={() => setMobileOpen(false)}
-              />
-            ))}
-          </nav>
-          <div className="mt-auto px-6 py-4 border-t border-slate-700 flex flex-col gap-3">
-            {!user && (
+        </div>
+      </motion.header>
+
+      {/* Mobile Sheet */}
+      <AnimatePresence>
+        {mobileOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25 }}
+            className="lg:hidden fixed inset-0 z-40 bg-[#FAFAF7]"
+          >
+            <div className="h-16" />
+            <motion.div
+              initial={{ y: -8, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.05, duration: 0.4 }}
+              className="px-6 pt-8 pb-4 flex items-center justify-between"
+            >
+              <Wordmark />
               <button
-                onClick={() => {
-                  setMobileOpen(false);
-                  navigate('/login');
-                }}
-                className="w-full px-4 py-2 rounded-2xl bg-gradient-to-r from-emerald-500 to-sky-400 hover:from-emerald-600 hover:to-sky-500 text-white font-semibold shadow-md transition-all duration-200"
+                onClick={() => setMobileOpen(false)}
+                className="p-2 -mr-1 rounded-lg hover:bg-[#F1EFE8]"
+                aria-label="Close"
               >
-                Get Started
+                <FiX size={22} />
               </button>
-            )}
-            {user && (
-              <div className="flex items-center gap-3">
-                {!imgError && user.photoURL ? (
-                  <img
-                    src={user.photoURL}
-                    alt="Profile"
-                    className="w-10 h-10 rounded-full object-cover border-2 border-slate-700 shadow"
-                    onError={() => setImgError(true)}
-                    referrerPolicy="no-referrer"
-                  />
-                ) : (
-                  <div className="w-10 h-10 rounded-full bg-indigo-700 flex items-center justify-center text-white font-bold text-lg shadow">
-                    {user.displayName ? user.displayName[0].toUpperCase() : <FiUser size={22} />}
-                  </div>
-                )}
-                <span className="text-slate-100 font-medium">{user.displayName || 'User'}</span>
+            </motion.div>
+            <nav className="px-6 pt-8 flex flex-col gap-1">
+              {NAV_LINKS.map((l, i) => (
+                <motion.div
+                  key={l.to}
+                  initial={{ opacity: 0, x: -16 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.1 + i * 0.06, duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                >
+                  <NavLink
+                    to={l.to}
+                    onClick={() => setMobileOpen(false)}
+                    className={({ isActive }) =>
+                      `block py-4 text-3xl font-display tracking-tight border-b border-[#E5E5E0] ${
+                        isActive ? "text-[#FF4A1C]" : "text-[#0A0A0A]"
+                      }`
+                    }
+                  >
+                    {l.label}
+                  </NavLink>
+                </motion.div>
+              ))}
+            </nav>
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.35, duration: 0.4 }}
+              className="absolute bottom-0 inset-x-0 p-6"
+            >
+              {!user ? (
                 <button
                   onClick={() => {
                     setMobileOpen(false);
-                    handleLogout();
+                    navigate("/login");
                   }}
-                  className="p-2 rounded-xl hover:bg-slate-800 transition-colors duration-200"
-                  aria-label="Logout"
+                  className="w-full h-12 rounded-full bg-[#0A0A0A] text-white text-[14px] font-medium"
                 >
-                  <FiLogOut size={22} className="text-slate-200" />
+                  Get Started
                 </button>
-              </div>
-            )}
-          </div>
-        </aside>
-      </div>
-      <style>{`
-        .animate-fade-in {
-          animation: fadeIn 0.8s cubic-bezier(.4,0,.2,1) both;
-        }
-        @keyframes fadeIn {
-          from { opacity: 0; transform: translateY(24px);}
-          to { opacity: 1; transform: translateY(0);}
-        }
-      `}</style>
-    </nav>
-  );
-};
+              ) : (
+                <button
+                  onClick={handleLogout}
+                  className="w-full h-12 rounded-full border border-[#0A0A0A] text-[#0A0A0A] text-[14px] font-medium"
+                >
+                  Sign out
+                </button>
+              )}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-export default Navbar;
+      <SearchPalette open={searchOpen} onClose={() => setSearchOpen(false)} />
+    </>
+  );
+}
